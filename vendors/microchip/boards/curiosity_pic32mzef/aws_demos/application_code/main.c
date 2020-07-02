@@ -72,7 +72,7 @@ static void prvMiscInitialization( void );
 /**
  * @brief Application runtime entry point.
  */
-extern void  vApplicationIPInit( void );
+extern void vApplicationIPInit( void );
 int main( void )
 {
     /* Perform any hardware initialization that does not require the RTOS to be
@@ -132,16 +132,16 @@ void vApplicationIPNetworkEventHook( eIPCallbackEvent_t eNetworkEvent )
             &ulGatewayAddress,
             &ulDNSServerAddress );
         FreeRTOS_inet_ntoa( ulIPAddress, cBuffer );
-        // FreeRTOS_printf( ( "\r\n\r\nIP Address: %s\r\n", cBuffer ) );
+        /* FreeRTOS_printf( ( "\r\n\r\nIP Address: %s\r\n", cBuffer ) ); */
 
-        // FreeRTOS_inet_ntoa( ulNetMask, cBuffer );
-        // FreeRTOS_printf( ( "Subnet Mask: %s\r\n", cBuffer ) );
+        /* FreeRTOS_inet_ntoa( ulNetMask, cBuffer ); */
+        /* FreeRTOS_printf( ( "Subnet Mask: %s\r\n", cBuffer ) ); */
 
-        // FreeRTOS_inet_ntoa( ulGatewayAddress, cBuffer );
-        // FreeRTOS_printf( ( "Gateway Address: %s\r\n", cBuffer ) );
+        /* FreeRTOS_inet_ntoa( ulGatewayAddress, cBuffer ); */
+        /* FreeRTOS_printf( ( "Gateway Address: %s\r\n", cBuffer ) ); */
 
-        // FreeRTOS_inet_ntoa( ulDNSServerAddress, cBuffer );
-        // FreeRTOS_printf( ( "DNS Server Address: %s\r\n\r\n\r\n", cBuffer ) );
+        /* FreeRTOS_inet_ntoa( ulDNSServerAddress, cBuffer ); */
+        /* FreeRTOS_printf( ( "DNS Server Address: %s\r\n\r\n\r\n", cBuffer ) ); */
     }
 }
 /*-----------------------------------------------------------*/
@@ -232,5 +232,3 @@ void vApplicationIdleHook( void )
     Sleep( ulMSToSleep );
 }
 /*-----------------------------------------------------------*/
-
-
