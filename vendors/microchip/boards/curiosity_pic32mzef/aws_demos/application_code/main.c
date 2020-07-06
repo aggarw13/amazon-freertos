@@ -54,7 +54,7 @@
 #define mainDEVICE_NICK_NAME                "Microchip_Demo"
 
 #define mainLOGGING_TASK_STACK_SIZE         ( configMINIMAL_STACK_SIZE * 5 )
-#define mainLOGGING_MESSAGE_QUEUE_LENGTH    ( 128 )
+#define mainLOGGING_MESSAGE_QUEUE_LENGTH    ( 256 )
 
 
 /**
