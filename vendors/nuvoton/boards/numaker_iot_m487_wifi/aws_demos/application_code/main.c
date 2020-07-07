@@ -38,12 +38,12 @@
 /* AWS library includes. */
 #include "iot_system_init.h"
 #include "iot_logging_task.h"
-#if(configENABLED_NETWORKS & AWSIOT_NETWORK_TYPE_ETH)
-#include "FreeRTOS_IP.h"
-#include "FreeRTOS_Sockets.h"
+#if ( configENABLED_NETWORKS & AWSIOT_NETWORK_TYPE_ETH )
+    #include "FreeRTOS_IP.h"
+    #include "FreeRTOS_Sockets.h"
 #endif
-#if(configENABLED_NETWORKS & AWSIOT_NETWORK_TYPE_WIFI)
-#include "iot_wifi.h"
+#if ( configENABLED_NETWORKS & AWSIOT_NETWORK_TYPE_WIFI )
+    #include "iot_wifi.h"
 #endif
 #include "aws_clientcredential.h"
 #include "aws_application_version.h"
@@ -60,10 +60,10 @@
 #define mainDEVICE_NICK_NAME                "Nuvoton_Demo"
 
 #define mainLOGGING_TASK_STACK_SIZE         ( configMINIMAL_STACK_SIZE * 5 )
-#define mainLOGGING_MESSAGE_QUEUE_LENGTH    ( 25 )
+#define mainLOGGING_MESSAGE_QUEUE_LENGTH    ( 64 )
 
 #if ( configENABLED_NETWORKS & AWSIOT_NETWORK_TYPE_ETH )
-extern uint8_t ucMACAddress[ ipMAC_ADDRESS_LENGTH_BYTES ];
+    extern uint8_t ucMACAddress[ ipMAC_ADDRESS_LENGTH_BYTES ];
 #endif
 
 /* The default IP and MAC address used by the demo.  The address configuration
@@ -110,8 +110,8 @@ void vApplicationDaemonTaskStartupHook( void );
 /**
  * @brief Connects to Wi-Fi.
  */
-#if(configENABLED_NETWORKS & AWSIOT_NETWORK_TYPE_WIFI)
-static void prvWifiConnect( void );
+#if ( configENABLED_NETWORKS & AWSIOT_NETWORK_TYPE_WIFI )
+    static void prvWifiConnect( void );
 #endif
 
 /**
@@ -120,6 +120,7 @@ static void prvWifiConnect( void );
 static void prvMiscInitialization( void );
 
 /*-----------------------------------------------------------*/
+
 /**
  * @Set up the hardware ready to run this demo.
  */
@@ -130,53 +131,53 @@ static void prvSetupHardware( void );
 /**
  * @brief Application runtime entry point.
  */
-#define mainCHECK_TASK_PRIORITY             ( tskIDLE_PRIORITY + 3UL )
+#define mainCHECK_TASK_PRIORITY      ( tskIDLE_PRIORITY + 3UL )
 
-#define mainCHECK_TASK_STACK_SIZE           ( configMINIMAL_STACK_SIZE )
-#define mainCHECK_DELAY                     ( ( portTickType ) 5000 / portTICK_RATE_MS )
-static void vCheckTask( void *pvParameters )
+#define mainCHECK_TASK_STACK_SIZE    ( configMINIMAL_STACK_SIZE )
+#define mainCHECK_DELAY              ( ( portTickType ) 5000 / portTICK_RATE_MS )
+static void vCheckTask( void * pvParameters )
 {
     portTickType xLastExecutionTime;
 
     xLastExecutionTime = xTaskGetTickCount();
 
-    printf("Check Task is running ...\n");
+    printf( "Check Task is running ...\n" );
 
-    for( ;; )
+    for( ; ; )
     {
         /* Perform this check every mainCHECK_DELAY milliseconds. */
         vTaskDelayUntil( &xLastExecutionTime, mainCHECK_DELAY );
-				printf("Check delay ...%d\n",xTaskGetTickCount());
-			  Sleep( 1 );
+        printf( "Check delay ...%d\n", xTaskGetTickCount() );
+        Sleep( 1 );
     }
 }
- 
+
 int main( void )
 {
     /* Perform any hardware initialization that does not require the RTOS to be
      * running.  */
     prvMiscInitialization();
-    configPRINTF( ( "FreeRTOS App Ver:%x\n", xAppFirmwareVersion));    
-    configPRINTF( ( "FreeRTOS_IPInit\n" ) );	
-    xTaskCreate( vCheckTask, "Check", mainCHECK_TASK_STACK_SIZE, NULL, mainCHECK_TASK_PRIORITY, NULL );	
+    configPRINTF( ( "FreeRTOS App Ver:%x\n", xAppFirmwareVersion ) );
+    configPRINTF( ( "FreeRTOS_IPInit\n" ) );
+    xTaskCreate( vCheckTask, "Check", mainCHECK_TASK_STACK_SIZE, NULL, mainCHECK_TASK_PRIORITY, NULL );
 
     /* A simple example to demonstrate key and certificate provisioning in
      * microcontroller flash using PKCS#11 interface. This should be replaced
      * by production ready key provisioning mechanism. */
-    vDevModeKeyProvisioning();       
+    vDevModeKeyProvisioning();
 
-#if ( configENABLED_NETWORKS & AWSIOT_NETWORK_TYPE_ETH )
-    FreeRTOS_IPInit( ucIPAddress,
-                     ucNetMask,
-                     ucGatewayAddress,
-                     ucDNSServerAddress,
-                     ucMACAddress );
-#endif
-    
+    #if ( configENABLED_NETWORKS & AWSIOT_NETWORK_TYPE_ETH )
+        FreeRTOS_IPInit( ucIPAddress,
+                         ucNetMask,
+                         ucGatewayAddress,
+                         ucDNSServerAddress,
+                         ucMACAddress );
+    #endif
+
     /* Start the scheduler.  Initialization that requires the OS to be running,
      * including the WiFi initialization, is performed in the RTOS daemon task
      * startup hook. */
-	configPRINTF( ( "vTaskStartScheduler\n" ) );
+    configPRINTF( ( "vTaskStartScheduler\n" ) );
     vTaskStartScheduler();
 
     return 0;
@@ -189,29 +190,29 @@ static void prvSetupHardware( void )
     SYS_UnlockReg();
 
     /* Set XT1_OUT(PF.2) and XT1_IN(PF.3) to input mode */
-    PF->MODE &= ~(GPIO_MODE_MODE2_Msk | GPIO_MODE_MODE3_Msk);
+    PF->MODE &= ~( GPIO_MODE_MODE2_Msk | GPIO_MODE_MODE3_Msk );
 
     /* Enable External XTAL (4~24 MHz) */
-    CLK_EnableXtalRC(CLK_PWRCTL_HXTEN_Msk);
+    CLK_EnableXtalRC( CLK_PWRCTL_HXTEN_Msk );
 
     /* Waiting for 12MHz clock ready */
-    CLK_WaitClockReady( CLK_STATUS_HXTSTB_Msk);
+    CLK_WaitClockReady( CLK_STATUS_HXTSTB_Msk );
 
     /* Set core clock as PLL_CLOCK from PLL */
-    CLK_SetCoreClock(FREQ_192MHZ);
+    CLK_SetCoreClock( FREQ_192MHZ );
 
     /* Set both PCLK0 and PCLK1 as HCLK/2 */
     CLK->PCLKDIV = CLK_PCLKDIV_PCLK0DIV2 | CLK_PCLKDIV_PCLK1DIV2;
 
     /* Enable IP clock */
-    CLK_EnableModuleClock(UART0_MODULE);
-    CLK_EnableModuleClock(EMAC_MODULE);
+    CLK_EnableModuleClock( UART0_MODULE );
+    CLK_EnableModuleClock( EMAC_MODULE );
 
     /* Select IP clock source */
-    CLK_SetModuleClock(UART0_MODULE, CLK_CLKSEL1_UART0SEL_HXT, CLK_CLKDIV0_UART0(1));
+    CLK_SetModuleClock( UART0_MODULE, CLK_CLKSEL1_UART0SEL_HXT, CLK_CLKDIV0_UART0( 1 ) );
 
-    // Configure MDC clock rate to HCLK / (127 + 1) = 1.5 MHz if system is running at 192 MHz
-    CLK_SetModuleClock(EMAC_MODULE, 0, CLK_CLKDIV3_EMAC(127));
+    /* Configure MDC clock rate to HCLK / (127 + 1) = 1.5 MHz if system is running at 192 MHz */
+    CLK_SetModuleClock( EMAC_MODULE, 0, CLK_CLKDIV3_EMAC( 127 ) );
 
     /* Update System Core Clock */
     /* User can use SystemCoreClockUpdate() to calculate SystemCoreClock. */
@@ -220,9 +221,9 @@ static void prvSetupHardware( void )
 
 
     /* Set GPB multi-function pins for UART0 RXD and TXD */
-    SYS->GPB_MFPH &= ~(SYS_GPB_MFPH_PB12MFP_Msk | SYS_GPB_MFPH_PB13MFP_Msk);
-    SYS->GPB_MFPH |= (SYS_GPB_MFPH_PB12MFP_UART0_RXD | SYS_GPB_MFPH_PB13MFP_UART0_TXD);
-    // Configure RMII pins
+    SYS->GPB_MFPH &= ~( SYS_GPB_MFPH_PB12MFP_Msk | SYS_GPB_MFPH_PB13MFP_Msk );
+    SYS->GPB_MFPH |= ( SYS_GPB_MFPH_PB12MFP_UART0_RXD | SYS_GPB_MFPH_PB13MFP_UART0_TXD );
+    /* Configure RMII pins */
     SYS->GPA_MFPL |= SYS_GPA_MFPL_PA6MFP_EMAC_RMII_RXERR | SYS_GPA_MFPL_PA7MFP_EMAC_RMII_CRSDV;
     SYS->GPC_MFPL |= SYS_GPC_MFPL_PC6MFP_EMAC_RMII_RXD1 | SYS_GPC_MFPL_PC7MFP_EMAC_RMII_RXD0;
     SYS->GPC_MFPH |= SYS_GPC_MFPH_PC8MFP_EMAC_RMII_REFCLK;
@@ -232,16 +233,16 @@ static void prvSetupHardware( void )
                      SYS_GPE_MFPH_PE11MFP_EMAC_RMII_TXD1 |
                      SYS_GPE_MFPH_PE12MFP_EMAC_RMII_TXEN;
 
-    // Enable high slew rate on all RMII TX output pins
-    PE->SLEWCTL = (GPIO_SLEWCTL_HIGH << GPIO_SLEWCTL_HSREN10_Pos) |
-                  (GPIO_SLEWCTL_HIGH << GPIO_SLEWCTL_HSREN11_Pos) |
-                  (GPIO_SLEWCTL_HIGH << GPIO_SLEWCTL_HSREN12_Pos);
+    /* Enable high slew rate on all RMII TX output pins */
+    PE->SLEWCTL = ( GPIO_SLEWCTL_HIGH << GPIO_SLEWCTL_HSREN10_Pos ) |
+                  ( GPIO_SLEWCTL_HIGH << GPIO_SLEWCTL_HSREN11_Pos ) |
+                  ( GPIO_SLEWCTL_HIGH << GPIO_SLEWCTL_HSREN12_Pos );
 
     /* Lock protected registers */
     SYS_LockReg();
 
     /* Init UART to 115200-8n1 for print message */
-    UART_Open(UART0, 115200);
+    UART_Open( UART0, 115200 );
 }
 
 /*-----------------------------------------------------------*/
@@ -258,140 +259,139 @@ static void prvMiscInitialization( void )
 
 void vApplicationDaemonTaskStartupHook( void )
 {
-#if ( configENABLED_NETWORKS & AWSIOT_NETWORK_TYPE_WIFI )
-    if( SYSTEM_Init() == pdPASS )
-    {
-        /* Connect to the Wi-Fi before running the tests. */
-        prvWifiConnect();
+    #if ( configENABLED_NETWORKS & AWSIOT_NETWORK_TYPE_WIFI )
+        if( SYSTEM_Init() == pdPASS )
+        {
+            /* Connect to the Wi-Fi before running the tests. */
+            prvWifiConnect();
 
-        /* Start the demo tasks. */
-        DEMO_RUNNER_RunDemos();
-    }
-#endif
+            /* Start the demo tasks. */
+            DEMO_RUNNER_RunDemos();
+        }
+    #endif
     ;
 }
 /*-----------------------------------------------------------*/
 
 #if ( configENABLED_NETWORKS & AWSIOT_NETWORK_TYPE_WIFI )
-void prvWifiConnect( void )
-{
-    WIFINetworkParams_t  xNetworkParams;
-    WIFIReturnCode_t xWifiStatus;
-    uint8_t ucIpAddr[4] = { 0 };
-
-    xWifiStatus = WIFI_On();
-
-    if( xWifiStatus == eWiFiSuccess )
+    void prvWifiConnect( void )
     {
-        configPRINTF( ( "Wi-Fi module initialized. Connecting to AP...\r\n" ) );
-    }
-    else
-    {
-        configPRINTF( ( "Wi-Fi module failed to initialize.\r\n" ) );
+        WIFINetworkParams_t xNetworkParams;
+        WIFIReturnCode_t xWifiStatus;
+        uint8_t ucIpAddr[ 4 ] = { 0 };
 
-        /* Delay to allow the lower priority logging task to print the above status. 
-         * The while loop below will block the above printing. */
-        Sleep( mainLOGGING_WIFI_STATUS_DELAY );
+        xWifiStatus = WIFI_On();
 
-        while( 1 )
+        if( xWifiStatus == eWiFiSuccess )
         {
+            configPRINTF( ( "Wi-Fi module initialized. Connecting to AP...\r\n" ) );
         }
-    }
-
-    /* Setup parameters. */
-    xNetworkParams.pcSSID = clientcredentialWIFI_SSID;
-    xNetworkParams.ucSSIDLength = sizeof( clientcredentialWIFI_SSID );
-    xNetworkParams.pcPassword = clientcredentialWIFI_PASSWORD;
-    xNetworkParams.ucPasswordLength = sizeof( clientcredentialWIFI_PASSWORD );
-    xNetworkParams.xSecurity = clientcredentialWIFI_SECURITY;
-    xNetworkParams.cChannel = 0;
-
-    xWifiStatus = WIFI_ConnectAP( &( xNetworkParams ) );
-
-    if( xWifiStatus == eWiFiSuccess )
-    {
-        configPRINTF( ( "Wi-Fi Connected to AP. Creating tasks which use network...\r\n" ) );
-
-        xWifiStatus = WIFI_GetIP( ucIpAddr );
-        if ( eWiFiSuccess == xWifiStatus ) 
+        else
         {
-            configPRINTF( ( "IP Address acquired %d.%d.%d.%d\r\n",
-                            ucIpAddr[ 0 ], ucIpAddr[ 1 ], ucIpAddr[ 2 ], ucIpAddr[ 3 ] ) );
-        }
-    }
-    else
-    {
-#if 0
-        /* Connection failed, configure SoftAP. */
-        configPRINTF( ( "Wi-Fi failed to connect to AP %s.\r\n", xNetworkParams.pcSSID ) );
+            configPRINTF( ( "Wi-Fi module failed to initialize.\r\n" ) );
 
-        xNetworkParams.pcSSID = wificonfigACCESS_POINT_SSID_PREFIX;
-        xNetworkParams.pcPassword = wificonfigACCESS_POINT_PASSKEY;
-        xNetworkParams.xSecurity = wificonfigACCESS_POINT_SECURITY;
-        xNetworkParams.cChannel = wificonfigACCESS_POINT_CHANNEL;
+            /* Delay to allow the lower priority logging task to print the above status.
+             * The while loop below will block the above printing. */
+            Sleep( mainLOGGING_WIFI_STATUS_DELAY );
 
-        configPRINTF( ( "Connect to SoftAP %s using password %s. \r\n",
-                        xNetworkParams.pcSSID, xNetworkParams.pcPassword ) );
-
-        while( WIFI_ConfigureAP( &xNetworkParams ) != eWiFiSuccess )
-        {
-            configPRINTF( ( "Connect to SoftAP %s using password %s and configure Wi-Fi. \r\n",
-                            xNetworkParams.pcSSID, xNetworkParams.pcPassword ) );
+            while( 1 )
+            {
+            }
         }
 
-        configPRINTF( ( "Wi-Fi configuration successful. \r\n" ) );
-#endif
+        /* Setup parameters. */
+        xNetworkParams.pcSSID = clientcredentialWIFI_SSID;
+        xNetworkParams.ucSSIDLength = sizeof( clientcredentialWIFI_SSID );
+        xNetworkParams.pcPassword = clientcredentialWIFI_PASSWORD;
+        xNetworkParams.ucPasswordLength = sizeof( clientcredentialWIFI_PASSWORD );
+        xNetworkParams.xSecurity = clientcredentialWIFI_SECURITY;
+        xNetworkParams.cChannel = 0;
+
+        xWifiStatus = WIFI_ConnectAP( &( xNetworkParams ) );
+
+        if( xWifiStatus == eWiFiSuccess )
+        {
+            configPRINTF( ( "Wi-Fi Connected to AP. Creating tasks which use network...\r\n" ) );
+
+            xWifiStatus = WIFI_GetIP( ucIpAddr );
+
+            if( eWiFiSuccess == xWifiStatus )
+            {
+                configPRINTF( ( "IP Address acquired %d.%d.%d.%d\r\n",
+                                ucIpAddr[ 0 ], ucIpAddr[ 1 ], ucIpAddr[ 2 ], ucIpAddr[ 3 ] ) );
+            }
+        }
+        else
+        {
+            #if 0
+                /* Connection failed, configure SoftAP. */
+                configPRINTF( ( "Wi-Fi failed to connect to AP %s.\r\n", xNetworkParams.pcSSID ) );
+
+                xNetworkParams.pcSSID = wificonfigACCESS_POINT_SSID_PREFIX;
+                xNetworkParams.pcPassword = wificonfigACCESS_POINT_PASSKEY;
+                xNetworkParams.xSecurity = wificonfigACCESS_POINT_SECURITY;
+                xNetworkParams.cChannel = wificonfigACCESS_POINT_CHANNEL;
+
+                configPRINTF( ( "Connect to SoftAP %s using password %s. \r\n",
+                                xNetworkParams.pcSSID, xNetworkParams.pcPassword ) );
+
+                while( WIFI_ConfigureAP( &xNetworkParams ) != eWiFiSuccess )
+                {
+                    configPRINTF( ( "Connect to SoftAP %s using password %s and configure Wi-Fi. \r\n",
+                                    xNetworkParams.pcSSID, xNetworkParams.pcPassword ) );
+                }
+                configPRINTF( ( "Wi-Fi configuration successful. \r\n" ) );
+            #endif /* if 0 */
+        }
     }
-}
-#endif
+#endif /* if ( configENABLED_NETWORKS & AWSIOT_NETWORK_TYPE_WIFI ) */
 
 #if ( configENABLED_NETWORKS & AWSIOT_NETWORK_TYPE_ETH )
-void vApplicationIPNetworkEventHook( eIPCallbackEvent_t eNetworkEvent )
-{
-    uint32_t ulIPAddress, ulNetMask, ulGatewayAddress, ulDNSServerAddress;
-    char cBuffer[ 16 ];
-    static BaseType_t xTasksAlreadyCreated = pdFALSE;
-
-    /* If the network has just come up...*/
-    if( eNetworkEvent == eNetworkUp )
+    void vApplicationIPNetworkEventHook( eIPCallbackEvent_t eNetworkEvent )
     {
-        /* The network is up so we can run. */
-			  
-        if( ( SYSTEM_Init() == pdPASS ) && ( xTasksAlreadyCreated == pdFALSE ) )
+        uint32_t ulIPAddress, ulNetMask, ulGatewayAddress, ulDNSServerAddress;
+        char cBuffer[ 16 ];
+        static BaseType_t xTasksAlreadyCreated = pdFALSE;
+
+        /* If the network has just come up...*/
+        if( eNetworkEvent == eNetworkUp )
         {
-          /* A simple example to demonstrate key and certificate provisioning in
-            * microcontroller flash using PKCS#11 interface. This should be replaced
-            * by production ready key provisioning mechanism. */
-            vDevModeKeyProvisioning();
-          
-            /* Run all demos. */
-            DEMO_RUNNER_RunDemos();
-            xTasksAlreadyCreated = pdTRUE;
+            /* The network is up so we can run. */
+
+            if( ( SYSTEM_Init() == pdPASS ) && ( xTasksAlreadyCreated == pdFALSE ) )
+            {
+                /* A simple example to demonstrate key and certificate provisioning in
+                 * microcontroller flash using PKCS#11 interface. This should be replaced
+                 * by production ready key provisioning mechanism. */
+                vDevModeKeyProvisioning();
+
+                /* Run all demos. */
+                DEMO_RUNNER_RunDemos();
+                xTasksAlreadyCreated = pdTRUE;
+            }
+
+            /* Print out the network configuration, which may have come from a DHCP
+             * server. */
+            FreeRTOS_GetAddressConfiguration(
+                &ulIPAddress,
+                &ulNetMask,
+                &ulGatewayAddress,
+                &ulDNSServerAddress );
+            FreeRTOS_inet_ntoa( ulIPAddress, cBuffer );
+            FreeRTOS_printf( ( "\r\n\r\nIP Address: %s\r\n", cBuffer ) );
+
+            FreeRTOS_inet_ntoa( ulNetMask, cBuffer );
+            FreeRTOS_printf( ( "Subnet Mask: %s\r\n", cBuffer ) );
+
+            FreeRTOS_inet_ntoa( ulGatewayAddress, cBuffer );
+            FreeRTOS_printf( ( "Gateway Address: %s\r\n", cBuffer ) );
+
+            FreeRTOS_inet_ntoa( ulDNSServerAddress, cBuffer );
+            FreeRTOS_printf( ( "DNS Server Address: %s\r\n\r\n\r\n", cBuffer ) );
         }
-
-        /* Print out the network configuration, which may have come from a DHCP
-         * server. */
-        FreeRTOS_GetAddressConfiguration(
-            &ulIPAddress,
-            &ulNetMask,
-            &ulGatewayAddress,
-            &ulDNSServerAddress );
-        FreeRTOS_inet_ntoa( ulIPAddress, cBuffer );
-        FreeRTOS_printf( ( "\r\n\r\nIP Address: %s\r\n", cBuffer ) );
-
-        FreeRTOS_inet_ntoa( ulNetMask, cBuffer );
-        FreeRTOS_printf( ( "Subnet Mask: %s\r\n", cBuffer ) );
-
-        FreeRTOS_inet_ntoa( ulGatewayAddress, cBuffer );
-        FreeRTOS_printf( ( "Gateway Address: %s\r\n", cBuffer ) );
-
-        FreeRTOS_inet_ntoa( ulDNSServerAddress, cBuffer );
-        FreeRTOS_printf( ( "DNS Server Address: %s\r\n\r\n\r\n", cBuffer ) );
     }
 
-}
-
-#endif
+#endif /* if ( configENABLED_NETWORKS & AWSIOT_NETWORK_TYPE_ETH ) */
 /*-----------------------------------------------------------*/
 
 void vAssertCalled( const char * pcFile,
@@ -479,14 +479,14 @@ void vApplicationIdleHook( void )
      * cycle of the idle task if configUSE_IDLE_HOOK is set to 1 in
      * FreeRTOSConfig.h.  It must *NOT* attempt to block.  In this case the
      * idle task just sleeps to lower the CPU usage. */
-//    Sleep( ulMSToSleep ); /* Call vTaskDelay in IdleHook will cause vTaskSwitchContext failure*/
-
+/*    Sleep( ulMSToSleep ); / * Call vTaskDelay in IdleHook will cause vTaskSwitchContext failure* / */
 }
 /*-----------------------------------------------------------*/
 
 void vApplicationTickHook( void )
 {
-	static uint32_t tickHookCnt=0; 
-	tickHookCnt++;
+    static uint32_t tickHookCnt = 0;
+
+    tickHookCnt++;
 }
 /*-----------------------------------------------------------*/

@@ -40,68 +40,68 @@
 *----------------------------------------------------------*/
 
 /* Ensure stdint is only used by the compiler, and not the assembler. */
-#if defined( __ICCARM__ ) || defined(__CC_ARM) || (defined(__ARMCC_VERSION) && (__ARMCC_VERSION >= 6010050)) || defined( __GNUC__ )
+#if defined( __ICCARM__ ) || defined( __CC_ARM ) || ( defined( __ARMCC_VERSION ) && ( __ARMCC_VERSION >= 6010050 ) ) || defined( __GNUC__ )
     #include <stdint.h>
     extern uint32_t SystemCoreClock;
 #endif
 
-#define configSUPPORT_STATIC_ALLOCATION              1
+#define configSUPPORT_STATIC_ALLOCATION       1
 
-#define configUSE_PREEMPTION                         1
-#define configUSE_IDLE_HOOK                          1
-#define configUSE_TICK_HOOK             1
-#define configUSE_TICKLESS_IDLE                      0
-#define configUSE_DAEMON_TASK_STARTUP_HOOK           1
-#define configCPU_CLOCK_HZ                           ( SystemCoreClock )
-#define configTICK_RATE_HZ                           ( ( TickType_t ) 1000 )
-#define configMAX_PRIORITIES                         ( 7 )
-#define configMINIMAL_STACK_SIZE                     ( ( uint16_t ) 256 )
-#define configTOTAL_HEAP_SIZE                        ( ( size_t ) ( 119 * 1024 ) )
-#define configMAX_TASK_NAME_LEN                      ( 16 )
-#define configUSE_TRACE_FACILITY                     1
-#define configUSE_16_BIT_TICKS                       0
-#define configIDLE_SHOULD_YIELD                      0
-#define configUSE_MUTEXES  				             1
-#define configUSE_TASK_NOTIFICATIONS                 1
-#define configQUEUE_REGISTRY_SIZE                    8
-#if defined(__ICCARM__)
-#define configCHECK_FOR_STACK_OVERFLOW               0      // IAR
+#define configUSE_PREEMPTION                  1
+#define configUSE_IDLE_HOOK                   1
+#define configUSE_TICK_HOOK                   1
+#define configUSE_TICKLESS_IDLE               0
+#define configUSE_DAEMON_TASK_STARTUP_HOOK    1
+#define configCPU_CLOCK_HZ                    ( SystemCoreClock )
+#define configTICK_RATE_HZ                    ( ( TickType_t ) 1000 )
+#define configMAX_PRIORITIES                  ( 7 )
+#define configMINIMAL_STACK_SIZE              ( ( uint16_t ) 256 )
+#define configTOTAL_HEAP_SIZE                 ( ( size_t ) ( 119 * 1024 ) )
+#define configMAX_TASK_NAME_LEN               ( 16 )
+#define configUSE_TRACE_FACILITY              1
+#define configUSE_16_BIT_TICKS                0
+#define configIDLE_SHOULD_YIELD               0
+#define configUSE_MUTEXES                     1
+#define configUSE_TASK_NOTIFICATIONS          1
+#define configQUEUE_REGISTRY_SIZE             8
+#if defined( __ICCARM__ )
+    #define configCHECK_FOR_STACK_OVERFLOW    0             /* IAR */
 #else
-#define configCHECK_FOR_STACK_OVERFLOW               2      // Keil
+    #define configCHECK_FOR_STACK_OVERFLOW    2             /* Keil */
 #endif
-#define configUSE_RECURSIVE_MUTEXES                  1
-#define configUSE_MALLOC_FAILED_HOOK                 1
-#define configUSE_APPLICATION_TASK_TAG               1
-#define configUSE_COUNTING_SEMAPHORES                1
-#define configGENERATE_RUN_TIME_STATS                0
-//#define configRECORD_STACK_HIGH_ADDRESS              1
-#define configUSE_POSIX_ERRNO                        1
+#define configUSE_RECURSIVE_MUTEXES           1
+#define configUSE_MALLOC_FAILED_HOOK          1
+#define configUSE_APPLICATION_TASK_TAG        1
+#define configUSE_COUNTING_SEMAPHORES         1
+#define configGENERATE_RUN_TIME_STATS         0
+/*#define configRECORD_STACK_HIGH_ADDRESS              1 */
+#define configUSE_POSIX_ERRNO                 1
 
 /* Co-routine definitions. */
-#define configUSE_CO_ROUTINES                        0
-#define configMAX_CO_ROUTINE_PRIORITIES              ( 2 )
+#define configUSE_CO_ROUTINES                 0
+#define configMAX_CO_ROUTINE_PRIORITIES       ( 2 )
 
 /* Software timer definitions. */
-#define configUSE_TIMERS                             1
-#define configTIMER_TASK_PRIORITY                   ( configMAX_PRIORITIES - 2 )
-#define configTIMER_QUEUE_LENGTH                     2
-#define configTIMER_TASK_STACK_DEPTH                 ( configMINIMAL_STACK_SIZE * 2 )
+#define configUSE_TIMERS                      1
+#define configTIMER_TASK_PRIORITY             ( configMAX_PRIORITIES - 2 )
+#define configTIMER_QUEUE_LENGTH              2
+#define configTIMER_TASK_STACK_DEPTH          ( configMINIMAL_STACK_SIZE * 2 )
 
 
 /* Set the following definitions to 1 to include the API function, or zero
  * to exclude the API function. */
-#define INCLUDE_vTaskPrioritySet			1
-#define INCLUDE_uxTaskPriorityGet			1
-#define INCLUDE_vTaskDelete					1
-#define INCLUDE_vTaskCleanUpResources		0
-#define INCLUDE_vTaskSuspend				1
-#define INCLUDE_vTaskDelayUntil				1
-#define INCLUDE_vTaskDelay					1
-#define INCLUDE_uxTaskGetStackHighWaterMark	1
-#define INCLUDE_pcTaskGetTaskName			1
-#define INCLUDE_xTaskGetIdleTaskHandle      1
-#define INCLUDE_pxTaskGetStackStart			1
-#define INCLUDE_xSemaphoreGetMutexHolder    1
+#define INCLUDE_vTaskPrioritySet               1
+#define INCLUDE_uxTaskPriorityGet              1
+#define INCLUDE_vTaskDelete                    1
+#define INCLUDE_vTaskCleanUpResources          0
+#define INCLUDE_vTaskSuspend                   1
+#define INCLUDE_vTaskDelayUntil                1
+#define INCLUDE_vTaskDelay                     1
+#define INCLUDE_uxTaskGetStackHighWaterMark    1
+#define INCLUDE_pcTaskGetTaskName              1
+#define INCLUDE_xTaskGetIdleTaskHandle         1
+#define INCLUDE_pxTaskGetStackStart            1
+#define INCLUDE_xSemaphoreGetMutexHolder       1
 /* Cortex-M specific definitions. */
 #ifdef __NVIC_PRIO_BITS
     /* __BVIC_PRIO_BITS will be specified when CMSIS is being used. */
@@ -130,8 +130,8 @@
 #define configMAX_SYSCALL_INTERRUPT_PRIORITY \
     ( configLIBRARY_MAX_SYSCALL_INTERRUPT_PRIORITY << ( 8 - configPRIO_BITS ) )
 
-#define configMAC_INTERRUPT_PRIORITY  (configLIBRARY_MAX_SYSCALL_INTERRUPT_PRIORITY + 1)
-    
+#define configMAC_INTERRUPT_PRIORITY    ( configLIBRARY_MAX_SYSCALL_INTERRUPT_PRIORITY + 1 )
+
 /* Normal assert() semantics without relying on the provision of an assert.h
  * header file. */
 #define configASSERT( x )                                        \
@@ -143,16 +143,16 @@ void vLoggingPrintf( const char * pcFormat,
                      ... );
 
 /* Map the FreeRTOS printf() to the logging task printf. */
-#define configPRINTF( x )          vLoggingPrintf x
+#define configPRINTF( x )    vLoggingPrintf x
 
 /* Non-format version thread-safe print */
-#define configPRINT( X )                  vLoggingPrint( X )
+#define configPRINT( X )     vLoggingPrint( X )
 /* Map the logging task's printf to the board specific retarget output function. */
-#define configPRINT_STRING    printf
+#define configPRINT_STRING                          printf
 
 /* Sets the length of the buffers into which logging messages are written - so
  * also defines the maximum length of each log message. */
-#define configLOGGING_MAX_MESSAGE_LENGTH            80
+#define configLOGGING_MAX_MESSAGE_LENGTH            128
 
 /* Set to 1 to prepend each log message with a message number, the task name,
  * and a time stamp. */
@@ -161,7 +161,7 @@ void vLoggingPrintf( const char * pcFormat,
 /* Pseudo random number generator, just used by demos so does not have to be
  * secure.  Do not use the standard C library rand() function as it can cause
  * unexpected behavior, such as calls to malloc(). */
-extern uint32_t numaker_ulRand(void);
+extern uint32_t numaker_ulRand( void );
 #define configRAND32()    numaker_ulRand()
 
 /* Demo specific macros that allow the application writer to insert code to be
@@ -171,7 +171,7 @@ extern uint32_t numaker_ulRand(void);
  * called pre and post the low power SLEEP mode being entered and exited.  These
  * macros can be used to turn turn off and on IO, clocks, the Flash etc. to obtain
  * the lowest power possible while the tick is off. */
-#if defined( __ICCARM__ ) || defined( __CC_ARM )|| (defined(__ARMCC_VERSION) && (__ARMCC_VERSION >= 6010050)) || defined( __GNUC__ )
+#if defined( __ICCARM__ ) || defined( __CC_ARM ) || ( defined( __ARMCC_VERSION ) && ( __ARMCC_VERSION >= 6010050 ) ) || defined( __GNUC__ )
     void vNuPreStopProcessing( void );
     void vNuPostStopProcessing( void );
 #endif /* defined(__ICCARM__) || defined(__CC_ARM) || defined(__GNUC__) */
@@ -181,14 +181,15 @@ extern uint32_t numaker_ulRand(void);
 
 /* Definitions that map the FreeRTOS port interrupt handlers to their CMSIS
  * standard names. */
-#define vPortSVCHandler SVC_Handler
-#define xPortPendSVHandler PendSV_Handler
+#define vPortSVCHandler               SVC_Handler
+#define xPortPendSVHandler            PendSV_Handler
 #define vHardFault_Handler            HardFault_Handler
-#define xPortSysTickHandler SysTick_Handler
+#define xPortSysTickHandler           SysTick_Handler
 
 /*********************************************
  * FreeRTOS specific demos
  ********************************************/
+
 /* If configINCLUDE_DEMO_DEBUG_STATS is set to one, then a few basic IP trace
  * macros are defined to gather some UDP stack statistics that can then be viewed
  * through the CLI interface. */
@@ -212,9 +213,9 @@ extern uint32_t numaker_ulRand(void);
  * results in the wired network being used, while setting
  * configNETWORK_INTERFACE_TO_USE to 2 results in the wireless network being
  * used. */
-#define configNETWORK_INTERFACE_TO_USE       4L//6L
+#define configNETWORK_INTERFACE_TO_USE       4L /*6L */
 
- 
+
 /* The address of an echo server that will be used by the two demo echo client
  * tasks.
  * http://www.freertos.org/FreeRTOS-Plus/FreeRTOS_Plus_TCP/TCP_Echo_Clients.html
@@ -226,7 +227,7 @@ extern uint32_t numaker_ulRand(void);
 #define configTCP_ECHO_CLIENT_PORT    7
 
 /* The platform FreeRTOS is running on. */
-#define configPLATFORM_NAME    "NuvotonNumakerM487"
+#define configPLATFORM_NAME           "NuvotonNumakerM487"
 
 /* Default MAC address configuration.  The demo creates a virtual network
  * connection that uses this MAC address by accessing the raw Ethernet/WiFi data
