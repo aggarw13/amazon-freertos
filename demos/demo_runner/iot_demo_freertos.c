@@ -32,6 +32,7 @@
 #include "iot_config.h"
 
 #include <string.h>
+#include <assert.h>
 #include "aws_clientcredential.h"
 #include "aws_clientcredential_keys.h"
 #include "iot_demo_logging.h"
@@ -366,6 +367,7 @@ void runDemoTask( void * pArgument )
             /* DO NOT EDIT - This message is used in the test framework to
              * determine whether or not the demo was successful. */
             IotLogInfo( "Demo completed successfully." );
+            assert( false );
         }
         else
         {
