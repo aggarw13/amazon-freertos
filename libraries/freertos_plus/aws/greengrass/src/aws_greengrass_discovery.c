@@ -218,8 +218,24 @@ BaseType_t GGD_GetGGCIPandCertificate( const char * pcHostAddress,
     if( xStatus == pdPASS )
     {
         ggdconfigPRINT( "GGD JSON file size: %d\r\n", ulJSONFileSize );
-        ggdconfigPRINT( "JSON: %.*s", 95, pcBuffer );
+        ggdconfigPRINT( "JSON: %.*s\r\n", 90, pcBuffer );
         ggdconfigPRINT( "%.*s\r\n", 100, pcBuffer + 90 );
+        ggdconfigPRINT( "%.*s\r\n", 100, pcBuffer + 190 );
+        ggdconfigPRINT( "%.*s\r\n", 100, pcBuffer + 290 );
+        ggdconfigPRINT( "%.*s\r\n", 100, pcBuffer + 390 );
+        ggdconfigPRINT( "%.*s\r\n", 100, pcBuffer + 490 );
+        ggdconfigPRINT( "%.*s\r\n", 100, pcBuffer + 590 );
+        ggdconfigPRINT( "%.*s\r\n", 100, pcBuffer + 690 );
+        ggdconfigPRINT( "%.*s\r\n", 100, pcBuffer + 790 );
+        ggdconfigPRINT( "%.*s\r\n", 100, pcBuffer + 890 );
+        ggdconfigPRINT( "%.*s\r\n", 100, pcBuffer + 990 );
+        ggdconfigPRINT( "%.*s\r\n", 100, pcBuffer + 1090 );
+        ggdconfigPRINT( "%.*s\r\n", 100, pcBuffer + 1190 );
+        ggdconfigPRINT( "%.*s\r\n", 100, pcBuffer + 1290 );
+        ggdconfigPRINT( "%.*s\r\n", 100, pcBuffer + 1390 );
+        ggdconfigPRINT( "%.*s\r\n", 100, pcBuffer + 1490 );
+        ggdconfigPRINT( "%.*s\r\n", 100, pcBuffer + 1590 );
+        ggdconfigPRINT( "%.*s\r\n", 82, pcBuffer + 1690 );
 
         xStatus = GGD_GetIPandCertificateFromJSON( pcBuffer,
                                                    ulJSONFileSize,
@@ -604,7 +620,7 @@ BaseType_t GGD_GetIPandCertificateFromJSON( char * pcJSONFile, /*lint !e971 can 
 
                 if( xIsIPValid == pdTRUE )
                 {
-                    ggdconfigPRINT( "About to connect for IP address: %s", ( const char * ) pxHostAddressData->pcHostAddress );
+                    ggdconfigPRINT( "About to connect for IP address: %s\r\n", ( const char * ) pxHostAddressData->pcHostAddress );
 
                     if( GGD_SecureConnect_Connect( pxHostAddressData,
                                                    &xSocket,
