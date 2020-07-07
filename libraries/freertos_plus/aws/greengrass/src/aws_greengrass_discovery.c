@@ -217,7 +217,9 @@ BaseType_t GGD_GetGGCIPandCertificate( const char * pcHostAddress,
 
     if( xStatus == pdPASS )
     {
-        ggdconfigPRINT( "GGD JSON: %.*s", ulJSONFileSize, pcBuffer );
+        ggdconfigPRINT( "GGD JSON file size: %d\r\n", ulJSONFileSize );
+        ggdconfigPRINT( "JSON: %.*s", 95, pcBuffer );
+        ggdconfigPRINT( "%.*s\r\n", 100, pcBuffer + 90 );
 
         xStatus = GGD_GetIPandCertificateFromJSON( pcBuffer,
                                                    ulJSONFileSize,
@@ -602,6 +604,8 @@ BaseType_t GGD_GetIPandCertificateFromJSON( char * pcJSONFile, /*lint !e971 can 
 
                 if( xIsIPValid == pdTRUE )
                 {
+                    ggdconfigPRINT( "About to connect for IP address: %s", ( const char * ) pxHostAddressData->pcHostAddress );
+
                     if( GGD_SecureConnect_Connect( pxHostAddressData,
                                                    &xSocket,
                                                    ggdconfigTCP_RECEIVE_TIMEOUT_MS,
@@ -612,6 +616,10 @@ BaseType_t GGD_GetIPandCertificateFromJSON( char * pcJSONFile, /*lint !e971 can 
                         /* Interface found, disconnect. */
                         GGD_SecureConnect_Disconnect( &xSocket );
                         break;
+                    }
+                    else
+                    {
+                        ggdconfigPRINT( " GGD_SecureConnect_Connect failed. \r\n" );
                     }
                 }
 

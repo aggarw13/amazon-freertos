@@ -138,6 +138,7 @@ BaseType_t GGD_SecureConnect_Connect( const GGD_HostAddressData_t * pxHostAddres
                     != SOCKETS_ERROR_NONE )
                 {
                     xStatus = pdFAIL;
+                    ggdconfigPRINT( "SOCKETS_SetSockOpt failed for Server Cert\r\n" );
                 }
             }
 
@@ -150,6 +151,7 @@ BaseType_t GGD_SecureConnect_Connect( const GGD_HostAddressData_t * pxHostAddres
                                         ( size_t ) 1 + xURLLength )
                     != SOCKETS_ERROR_NONE )
                 {
+                    ggdconfigPRINT( "SOCKETS_SetSockOpt failed for SNI\r\n" );
                     xStatus = pdFAIL;
                 }
             }
@@ -162,6 +164,7 @@ BaseType_t GGD_SecureConnect_Connect( const GGD_HostAddressData_t * pxHostAddres
                                        ( uint32_t ) sizeof( xServerAddress ) )
                       != SOCKETS_ERROR_NONE ) )
                 {
+                    ggdconfigPRINT( "SOCKETS_Connect failed\r\n" );
                     GGD_SecureConnect_Disconnect( pxSocket );
                     xStatus = pdFAIL;
                 }
