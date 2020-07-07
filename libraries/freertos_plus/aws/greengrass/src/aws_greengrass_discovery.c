@@ -217,7 +217,7 @@ BaseType_t GGD_GetGGCIPandCertificate( const char * pcHostAddress,
 
     if( xStatus == pdPASS )
     {
-        ggdconfigPRINT( "GGD JSON: %*.s", ulJSONFileSize, pcBuffer );
+        ggdconfigPRINT( "GGD JSON: %.*s", ulJSONFileSize, pcBuffer );
 
         xStatus = GGD_GetIPandCertificateFromJSON( pcBuffer,
                                                    ulJSONFileSize,
