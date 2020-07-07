@@ -94,7 +94,7 @@ static void prvMiscInitialization( void )
 {
     /* Start logging task. */
     xLoggingTaskInitialize( mainLOGGING_TASK_STACK_SIZE,
-                            tskIDLE_PRIORITY,
+                            1,
                             mainLOGGING_MESSAGE_QUEUE_LENGTH );
 
     SYS_Initialize( NULL );
