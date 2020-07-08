@@ -107,7 +107,7 @@ BaseType_t GGD_SecureConnect_Connect( const GGD_HostAddressData_t * pxHostAddres
 
             xServerAddress.ulAddress =
                 SOCKETS_GetHostByName( pxHostAddressData->pcHostAddress );
-            ggdconfigPRINT( "SOCKETS_GETHostByName returned: Address=%s", xServerAddress.ulAddress );
+            ggdconfigPRINT( "SOCKETS_GETHostByName returned: Address=%d", xServerAddress.ulAddress );
 
             xServerAddress.ucSocketDomain = SOCKETS_AF_INET;
 
