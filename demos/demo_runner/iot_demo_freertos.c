@@ -331,6 +331,7 @@ void runDemoTask( void * pArgument )
     /* DO NOT EDIT - This demo start marker is used in the test framework to
      * determine the start of a demo. */
     IotLogInfo( "---------STARTING DEMO---------\n" );
+    assert( false );
 
     status = _initialize( pContext );
 
