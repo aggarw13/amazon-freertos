@@ -331,7 +331,6 @@ void runDemoTask( void * pArgument )
     /* DO NOT EDIT - This demo start marker is used in the test framework to
      * determine the start of a demo. */
     IotLogInfo( "---------STARTING DEMO---------\n" );
-    assert( false );
 
     status = _initialize( pContext );
 
@@ -344,6 +343,7 @@ void runDemoTask( void * pArgument )
         pCredentials = AwsIotNetworkManager_GetCredentials( demoConnectedNetwork );
 
         /* Run the demo. */
+        assert( false );
         status = pContext->demoFunction( true,
                                          clientcredentialIOT_THING_NAME,
                                          pConnectionParams,
