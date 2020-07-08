@@ -170,7 +170,10 @@ int32_t SOCKETS_Connect( Socket_t xSocket,
         xTempAddress.sin_family = pxAddress->ucSocketDomain;
         xTempAddress.sin_len = ( uint8_t ) sizeof( xTempAddress );
         xTempAddress.sin_port = pxAddress->usPort;
+        vLoggingPrintf( "Calling FreeRTOS_Connect for %d:%d\r\n", xTempAddress.sin_addr, xTempAddress.sin_port );
+
         lStatus = FreeRTOS_connect( pxContext->xSocket, &xTempAddress, xAddressLength );
+        vLoggingPrintf( "FreeRTOS_Connect returned status=%d\r\n", lStatus );
 
         /* Negotiate TLS if requested. */
         if( ( SOCKETS_ERROR_NONE == lStatus ) && ( pdTRUE == pxContext->xRequireTLS ) )
@@ -188,10 +191,12 @@ int32_t SOCKETS_Connect( Socket_t xSocket,
 
             if( SOCKETS_ERROR_NONE == lStatus )
             {
+                vLoggingPrintf( "Calling TLS_Connect\r\n" );
                 lStatus = TLS_Connect( pxContext->pvTLSContext );
 
                 if( lStatus < 0 )
                 {
+                    vLoggingPrintf( "TLS_Connect failed: Status=%d\r\n", lStatus );
                     lStatus = SOCKETS_TLS_HANDSHAKE_ERROR;
                 }
             }
