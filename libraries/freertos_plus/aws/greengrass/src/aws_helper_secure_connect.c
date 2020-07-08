@@ -103,8 +103,12 @@ BaseType_t GGD_SecureConnect_Connect( const GGD_HostAddressData_t * pxHostAddres
 
             xServerAddress.ucLength = sizeof( SocketsSockaddr_t );
             xServerAddress.usPort = SOCKETS_htons( pxHostAddressData->usPort );
+            ggdconfigPRINT( "Calling SOCKETS_GETHostByName: Address=%s", pxHostAddressData->pcHostAddress );
+
             xServerAddress.ulAddress =
                 SOCKETS_GetHostByName( pxHostAddressData->pcHostAddress );
+            ggdconfigPRINT( "SOCKETS_GETHostByName returned: Address=%s", xServerAddress.ulAddress );
+
             xServerAddress.ucSocketDomain = SOCKETS_AF_INET;
 
             /* Set send timeout for the socket. */
