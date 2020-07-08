@@ -343,7 +343,7 @@ void runDemoTask( void * pArgument )
         pCredentials = AwsIotNetworkManager_GetCredentials( demoConnectedNetwork );
 
         /* Run the demo. */
-        assert( false );
+        /*assert( false ); */
         status = pContext->demoFunction( true,
                                          clientcredentialIOT_THING_NAME,
                                          pConnectionParams,
