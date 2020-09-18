@@ -1,5 +1,5 @@
 /*
- * FreeRTOS+TCP V2.2.1
+ * FreeRTOS+TCP V2.3.0
  * Copyright (C) 2017 Amazon.com, Inc. or its affiliates.  All Rights Reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of
@@ -401,6 +401,7 @@ socket events. */
 		(right) = tmp; \
 	} while ( ipFALSE_BOOL )
 
+/* WARNING: Do NOT use this macro when the array was received as a parameter. */
 #ifndef ARRAY_SIZE
 	#define ARRAY_SIZE(x)	( ( BaseType_t ) ( sizeof( x ) / sizeof( ( x )[ 0 ] ) ) )
 #endif
@@ -721,9 +722,11 @@ int32_t lTCPAddRxdata(FreeRTOS_Socket_t *pxSocket, size_t uxOffset, const uint8_
 void vSocketWakeUpUser( FreeRTOS_Socket_t *pxSocket );
 
 /*
- * Some helping function, their meaning should be clear
+ * Some helping function, their meaning should be clear.
+ * Going by MISRA rules, these utility functions should not be defined
+ * if they are not being used anywhwere. But their use depends on the
+ * application and hence these functions are defined unconditionally.
  */
- /* coverity[misra_c_2012_rule_2_2_violation] */
 static portINLINE uint32_t ulChar2u32 (const uint8_t *apChr);
 static portINLINE uint32_t ulChar2u32 (const uint8_t *apChr)
 {

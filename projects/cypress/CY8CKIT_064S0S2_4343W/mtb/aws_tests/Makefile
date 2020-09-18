@@ -71,9 +71,6 @@ VERBOSE=
 # OTA_SUPPORT needed for some AWS Demos
 OTA_SUPPORT=0
 
-# FreeRTOS plus TCP
-CY_USE_FREERTOS_PLUS_TCP=1
-
 ################################################################################
 # Advanced Configuration
 ################################################################################
@@ -107,7 +104,7 @@ INCLUDES=
 DEFINES=CYBSP_WIFI_CAPABLE CY_RTOS_AWARE CY_USING_HAL
 
 # Add TFM defines
-DEFINES+=CY_TFM_PSA_SUPPORTED TFM_MULTI_CORE_MULTI_CLIENT_CALL
+DEFINES+=CY_TFM_PSA_SUPPORTED TFM_MULTI_CORE_MULTI_CLIENT_CALL CY_TFM_VERSION_1_0
 
 # Add Mbedtls defines
 DEFINES+=CONFIG_MEDTLS_USE_AFR_MEMORY MBEDTLS_CONFIG_FILE=\"aws_mbedtls_config.h\"

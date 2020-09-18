@@ -1,5 +1,5 @@
 /*
- * FreeRTOS+TCP V2.2.1
+ * FreeRTOS+TCP V2.3.0
  * Copyright (C) 2017 Amazon.com, Inc. or its affiliates.  All Rights Reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of
@@ -257,7 +257,7 @@ FreeRTOS_Socket_t *pxSocket;
 configASSERT( pxNetworkBuffer != NULL );
 configASSERT( pxNetworkBuffer->pucEthernetBuffer != NULL );
 
-
+/* Map the ethernet buffer to the UDPPacket_t struct for easy access to the fields. */
 const UDPPacket_t *pxUDPPacket = ipPOINTER_CAST( const UDPPacket_t *, pxNetworkBuffer->pucEthernetBuffer );
 
 	/* Caller must check for minimum packet size. */
