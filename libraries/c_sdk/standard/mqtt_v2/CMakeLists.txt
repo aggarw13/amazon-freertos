@@ -1,4 +1,4 @@
-afr_module(NAME "mqtt_v2" INTERFACE)
+afr_module(NAME "mqtt_v2" )
 
 afr_set_lib_metadata(ID "mqtt_v2")
 afr_set_lib_metadata(DESCRIPTION "This library implements the MQTT v2 protocol that enables \
@@ -14,7 +14,7 @@ set(test_dir "${CMAKE_CURRENT_LIST_DIR}/utest")
 
 afr_module_sources(
     ${AFR_CURRENT_MODULE}
-    INTERFACE
+    PRIVATE
          "${src_dir}/mqtt.c"
          "${src_dir}/mqtt_lightweight.c"
          "${src_dir}/mqtt_state.c"
@@ -23,7 +23,7 @@ afr_module_sources(
 
 afr_module_include_dirs(
     ${AFR_CURRENT_MODULE}
-    INTERFACE
+    PUBLIC
         "${inc_dir}"
 )
 
