@@ -24,7 +24,7 @@
  */
 
 /**
- * @file iot_tests_mqtt_system.c
+ * @file iot_tests_mqtt_system_x.c
  * @brief Full system tests for the MQTT library.
  */
 
@@ -623,14 +623,14 @@ static void _subscribePublishWait( IotMqttQos_t qos )
 /**
  * @brief Test group for MQTT system tests.
  */
-TEST_GROUP( MQTT_System );
+TEST_GROUP( MQTT_System_x );
 
 /*-----------------------------------------------------------*/
 
 /**
  * @brief Test setup for MQTT system tests.
  */
-TEST_SETUP( MQTT_System )
+TEST_SETUP( MQTT_System_x )
 {
     /* Clear the serializer override flags. */
     _freePacketOverride = false;
@@ -694,7 +694,7 @@ TEST_SETUP( MQTT_System )
 /**
  * @brief Test tear down for MQTT system tests.
  */
-TEST_TEAR_DOWN( MQTT_System )
+TEST_TEAR_DOWN( MQTT_System_x )
 {
     /* Clean up the MQTT library. */
     IotMqtt_Cleanup();
@@ -714,15 +714,15 @@ TEST_TEAR_DOWN( MQTT_System )
 /**
  * @brief Test group runner for MQTT system tests.
  */
-TEST_GROUP_RUNNER( MQTT_System )
+TEST_GROUP_RUNNER( MQTT_System_x )
 {
-    RUN_TEST_CASE( MQTT_System, SubscribePublishWaitQoS0 );
-    RUN_TEST_CASE( MQTT_System, SubscribePublishWaitQoS1 );
-    RUN_TEST_CASE( MQTT_System, SubscribePublishAsync );
-    RUN_TEST_CASE( MQTT_System, LastWillAndTestament );
-    RUN_TEST_CASE( MQTT_System, RestorePreviousSession );
-    RUN_TEST_CASE( MQTT_System, SubscribeCompleteReentrancy );
-    RUN_TEST_CASE( MQTT_System, IncomingPublishReentrancy )
+    RUN_TEST_CASE( MQTT_System_x, SubscribePublishWaitQoS0 );
+    RUN_TEST_CASE( MQTT_System_x, SubscribePublishWaitQoS1 );
+    RUN_TEST_CASE( MQTT_System_x, SubscribePublishAsync );
+    RUN_TEST_CASE( MQTT_System_x, LastWillAndTestament );
+    RUN_TEST_CASE( MQTT_System_x, RestorePreviousSession );
+    RUN_TEST_CASE( MQTT_System_x, SubscribeCompleteReentrancy );
+    RUN_TEST_CASE( MQTT_System_x, IncomingPublishReentrancy )
 }
 
 /*-----------------------------------------------------------*/
@@ -730,7 +730,7 @@ TEST_GROUP_RUNNER( MQTT_System )
 /**
  * @brief Subscribe-publish-wait (QoS 0).
  */
-TEST( MQTT_System, SubscribePublishWaitQoS0 )
+TEST( MQTT_System_x, SubscribePublishWaitQoS0 )
 {
     _subscribePublishWait( IOT_MQTT_QOS_0 );
 }
@@ -740,7 +740,7 @@ TEST( MQTT_System, SubscribePublishWaitQoS0 )
 /**
  * @brief Subscribe-publish-wait (QoS 1).
  */
-TEST( MQTT_System, SubscribePublishWaitQoS1 )
+TEST( MQTT_System_x, SubscribePublishWaitQoS1 )
 {
     _subscribePublishWait( IOT_MQTT_QOS_1 );
 }
@@ -750,7 +750,7 @@ TEST( MQTT_System, SubscribePublishWaitQoS1 )
 /**
  * @brief Subscribe-publish asynchronous (QoS 1).
  */
-TEST( MQTT_System, SubscribePublishAsync )
+TEST( MQTT_System_x, SubscribePublishAsync )
 {
     IotMqttError_t status = IOT_MQTT_STATUS_PENDING;
     IotMqttConnectInfo_t connectInfo = IOT_MQTT_CONNECT_INFO_INITIALIZER;
@@ -868,7 +868,7 @@ TEST( MQTT_System, SubscribePublishAsync )
 /**
  * @brief Test that a LWT is published if an MQTT connection is unexpectedly closed.
  */
-TEST( MQTT_System, LastWillAndTestament )
+TEST( MQTT_System_x, LastWillAndTestament )
 {
     IotMqttError_t status = IOT_MQTT_STATUS_PENDING;
     IotMqttNetworkInfo_t lwtNetworkInfo = IOT_MQTT_NETWORK_INFO_INITIALIZER;
@@ -975,7 +975,7 @@ TEST( MQTT_System, LastWillAndTestament )
 /**
  * @brief Test that subscriptions from a previous session are restored.
  */
-TEST( MQTT_System, RestorePreviousSession )
+TEST( MQTT_System_x, RestorePreviousSession )
 {
     IotMqttError_t status = IOT_MQTT_STATUS_PENDING;
     IotMqttConnectInfo_t connectInfo = IOT_MQTT_CONNECT_INFO_INITIALIZER;
@@ -1086,7 +1086,7 @@ TEST( MQTT_System, RestorePreviousSession )
  * @brief Test that API functions can be invoked from a callback for a completed
  * subscription operation.
  */
-TEST( MQTT_System, SubscribeCompleteReentrancy )
+TEST( MQTT_System_x, SubscribeCompleteReentrancy )
 {
     IotMqttError_t status = IOT_MQTT_STATUS_PENDING;
     IotMqttConnectInfo_t connectInfo = IOT_MQTT_CONNECT_INFO_INITIALIZER;
@@ -1158,7 +1158,7 @@ TEST( MQTT_System, SubscribeCompleteReentrancy )
  * @brief Test that API functions can be invoked from a callback for an incoming
  * PUBLISH.
  */
-TEST( MQTT_System, IncomingPublishReentrancy )
+TEST( MQTT_System_x, IncomingPublishReentrancy )
 {
     IotMqttError_t status = IOT_MQTT_STATUS_PENDING;
     IotMqttConnectInfo_t connectInfo = IOT_MQTT_CONNECT_INFO_INITIALIZER;
