@@ -63,7 +63,7 @@ unsigned int xHeapAfter;
 static void RunTests( void )
 {
     /* Tests can be disabled in aws_test_runner_config.h */
-    RUN_TEST_GROUP( MQTT_Integration );
+    /*RUN_TEST_GROUP( MQTT_Integration ); */
 
     /* The FreeRTOS qualification program requires that Wi-Fi and TCP be the
      * first tests in this function. */
@@ -105,11 +105,11 @@ static void RunTests( void )
     #endif /* if ( testrunnerFULL_SHADOWv4_ENABLED == 1 ) */
 
     #if ( testrunnerFULL_MQTTv4_ENABLED == 1 )
-        RUN_TEST_GROUP( MQTT_Unit_Validate );
-        RUN_TEST_GROUP( MQTT_Unit_Subscription );
-        RUN_TEST_GROUP( MQTT_Unit_Receive );
-        RUN_TEST_GROUP( MQTT_Unit_API );
-        RUN_TEST_GROUP( MQTT_Unit_Metrics );
+        /* RUN_TEST_GROUP( MQTT_Unit_Validate ); */
+        /* RUN_TEST_GROUP( MQTT_Unit_Subscription ); */
+        /* RUN_TEST_GROUP( MQTT_Unit_Receive ); */
+        /* RUN_TEST_GROUP( MQTT_Unit_API ); */
+        /* RUN_TEST_GROUP( MQTT_Unit_Metrics ); */
         RUN_TEST_GROUP( MQTT_System );
     #endif /* if ( testrunnerFULL_MQTTv4_ENABLED == 1 ) */
 

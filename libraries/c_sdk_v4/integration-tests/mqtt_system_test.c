@@ -762,12 +762,12 @@ static void resumePersistentSession()
 /**
  * @brief Test group for MQTT system tests.
  */
-TEST_GROUP( MQTT_Integration );
+TEST_GROUP( MQTT_SYSTEM );
 
 /* ============================   UNITY FIXTURES ============================ */
 
 /* Called before each test method. */
-TEST_SETUP( MQTT_Integration )
+TEST_SETUP( MQTT_SYSTEM )
 {
     /* Reset file-scoped global variables. */
     receivedSubAck = false;
@@ -809,7 +809,7 @@ TEST_SETUP( MQTT_Integration )
 }
 
 /* Called after each test method. */
-TEST_TEAR_DOWN( MQTT_Integration )
+TEST_TEAR_DOWN( MQTT_SYSTEM )
 {
     /* Free memory, if allocated during test case execution. */
     if( incomingInfo.pTopicName != NULL )
@@ -834,20 +834,20 @@ TEST_TEAR_DOWN( MQTT_Integration )
 /**
  * @brief Test group runner for MQTT system tests.
  */
-TEST_GROUP_RUNNER( MQTT_Integration )
+TEST_GROUP_RUNNER( MQTT_SYSTEM )
 {
-    RUN_TEST_CASE( MQTT_Integration, Subscribe_Publish_With_Qos_0 );
-    RUN_TEST_CASE( MQTT_Integration, Subscribe_Publish_With_Qos_1 );
-    RUN_TEST_CASE( MQTT_Integration, Subscribe_Publish_With_Qos_2 );
-    RUN_TEST_CASE( MQTT_Integration, Connect_LWT );
-    RUN_TEST_CASE( MQTT_Integration, ProcessLoop_KeepAlive );
-    RUN_TEST_CASE( MQTT_Integration, Restore_Session_Resend_PubRel );
-    RUN_TEST_CASE( MQTT_Integration, Restore_Session_Incoming_Duplicate_PubRel );
-    RUN_TEST_CASE( MQTT_Integration, Resend_Unacked_Publish_QoS1 );
-    RUN_TEST_CASE( MQTT_Integration, Resend_Unacked_Publish_QoS2 );
-    RUN_TEST_CASE( MQTT_Integration, Restore_Session_Duplicate_Incoming_Publish_Qos1 );
-    RUN_TEST_CASE( MQTT_Integration, Restore_Session_Duplicate_Incoming_Publish_Qos2 );
-    RUN_TEST_CASE( MQTT_Integration, Publish_With_Retain_Flag );
+    RUN_TEST_CASE( MQTT_SYSTEM, Subscribe_Publish_With_Qos_0 );
+    RUN_TEST_CASE( MQTT_SYSTEM, Subscribe_Publish_With_Qos_1 );
+    RUN_TEST_CASE( MQTT_SYSTEM, Subscribe_Publish_With_Qos_2 );
+    RUN_TEST_CASE( MQTT_SYSTEM, Connect_LWT );
+    RUN_TEST_CASE( MQTT_SYSTEM, ProcessLoop_KeepAlive );
+    RUN_TEST_CASE( MQTT_SYSTEM, Restore_Session_Resend_PubRel );
+    RUN_TEST_CASE( MQTT_SYSTEM, Restore_Session_Incoming_Duplicate_PubRel );
+    RUN_TEST_CASE( MQTT_SYSTEM, Resend_Unacked_Publish_QoS1 );
+    RUN_TEST_CASE( MQTT_SYSTEM, Resend_Unacked_Publish_QoS2 );
+    RUN_TEST_CASE( MQTT_SYSTEM, Restore_Session_Duplicate_Incoming_Publish_Qos1 );
+    RUN_TEST_CASE( MQTT_SYSTEM, Restore_Session_Duplicate_Incoming_Publish_Qos2 );
+    RUN_TEST_CASE( MQTT_SYSTEM, Publish_With_Retain_Flag );
 }
 
 
@@ -858,7 +858,7 @@ TEST_GROUP_RUNNER( MQTT_Integration )
  * The test subscribes to a topic, and then publishes to the same topic. The
  * broker is expected to route the publish message back to the test.
  */
-TEST( MQTT_Integration, Subscribe_Publish_With_Qos_0 )
+TEST( MQTT_SYSTEM, Subscribe_Publish_With_Qos_0 )
 {
     /* Subscribe to a topic with Qos 0. */
     TEST_ASSERT_EQUAL( MQTTSuccess, subscribeToTopic(
@@ -914,7 +914,7 @@ TEST( MQTT_Integration, Subscribe_Publish_With_Qos_0 )
  * The test subscribes to a topic, and then publishes to the same topic. The
  * broker is expected to route the publish message back to the test.
  */
-TEST( MQTT_Integration, Subscribe_Publish_With_Qos_1 )
+TEST( MQTT_SYSTEM, Subscribe_Publish_With_Qos_1 )
 {
     /* Subscribe to a topic with Qos 1. */
     TEST_ASSERT_EQUAL( MQTTSuccess, subscribeToTopic(
@@ -975,7 +975,7 @@ TEST( MQTT_Integration, Subscribe_Publish_With_Qos_1 )
  * The test subscribes to a topic, and then publishes to the same topic. The
  * broker is expected to route the publish message back to the test.
  */
-TEST( MQTT_Integration, Subscribe_Publish_With_Qos_2 )
+TEST( MQTT_SYSTEM, Subscribe_Publish_With_Qos_2 )
 {
     /* Subscribe to a topic with Qos 2. */
     TEST_ASSERT_EQUAL( MQTTSuccess, subscribeToTopic(
@@ -1044,7 +1044,7 @@ TEST( MQTT_Integration, Subscribe_Publish_With_Qos_2 )
  * @brief Verifies that the MQTT library supports the "Last Will and Testament" feature when
  * establishing a connection with a broker.
  */
-TEST( MQTT_Integration, Connect_LWT )
+TEST( MQTT_SYSTEM, Connect_LWT )
 {
     NetworkContext_t secondNetworkContext = { 0 };
     bool sessionPresent;
@@ -1104,7 +1104,7 @@ TEST( MQTT_Integration, Connect_LWT )
  * @brief Verifies that the MQTT library sends a Ping Request packet if the connection is
  * idle for more than the keep-alive period.
  */
-TEST( MQTT_Integration, ProcessLoop_KeepAlive )
+TEST( MQTT_SYSTEM, ProcessLoop_KeepAlive )
 {
     uint32_t connectPacketTime = context.lastPacketTime;
     uint32_t elapsedTime = 0;
@@ -1128,7 +1128,7 @@ TEST( MQTT_Integration, ProcessLoop_KeepAlive )
  * Tests that the library resends PUBREL packets to the broker in a restored session for an incomplete
  * PUBLISH operation in a previous connection.
  */
-TEST( MQTT_Integration, Restore_Session_Resend_PubRel )
+TEST( MQTT_SYSTEM, Restore_Session_Resend_PubRel )
 {
     /* Start a persistent session with the broker. */
     startPersistentSession();
@@ -1171,7 +1171,7 @@ TEST( MQTT_Integration, Restore_Session_Resend_PubRel )
  * incoming QoS 2 PUBLISH operation that was incomplete in a previous connection
  * of the same session.
  */
-TEST( MQTT_Integration, Restore_Session_Incoming_Duplicate_PubRel )
+TEST( MQTT_SYSTEM, Restore_Session_Incoming_Duplicate_PubRel )
 {
     /* Start a persistent session with the broker. */
     startPersistentSession();
@@ -1226,7 +1226,7 @@ TEST( MQTT_Integration, Restore_Session_Incoming_Duplicate_PubRel )
  * un-acknowledged in its first attempt.
  * Tests that the library is able to support resending the PUBLISH packet with the DUP flag.
  */
-TEST( MQTT_Integration, Resend_Unacked_Publish_QoS1 )
+TEST( MQTT_SYSTEM, Resend_Unacked_Publish_QoS1 )
 {
     /* Start a persistent session with the broker. */
     startPersistentSession();
@@ -1296,7 +1296,7 @@ TEST( MQTT_Integration, Resend_Unacked_Publish_QoS1 )
  * un-acknowledged in its first attempt.
  * Tests that the library is able to support resending the PUBLISH packet with the DUP flag.
  */
-TEST( MQTT_Integration, Resend_Unacked_Publish_QoS2 )
+TEST( MQTT_SYSTEM, Resend_Unacked_Publish_QoS2 )
 {
     /* Start a persistent session with the broker. */
     startPersistentSession();
@@ -1368,7 +1368,7 @@ TEST( MQTT_Integration, Resend_Unacked_Publish_QoS2 )
  * Tests that the library responds with a PUBACK to the duplicate incoming QoS 1 PUBLISH
  * packet that was un-acknowledged in a previous connection of the same session.
  */
-TEST( MQTT_Integration, Restore_Session_Duplicate_Incoming_Publish_Qos1 )
+TEST( MQTT_SYSTEM, Restore_Session_Duplicate_Incoming_Publish_Qos1 )
 {
     /* Start a persistent session with the broker. */
     startPersistentSession();
@@ -1423,7 +1423,7 @@ TEST( MQTT_Integration, Restore_Session_Duplicate_Incoming_Publish_Qos1 )
  * Tests that the library responds with the ack packets for the incoming duplicate
  * QoS 2 PUBLISH packet that was un-acknowledged in a previous connection of the same session.
  */
-TEST( MQTT_Integration, Restore_Session_Duplicate_Incoming_Publish_Qos2 )
+TEST( MQTT_SYSTEM, Restore_Session_Duplicate_Incoming_Publish_Qos2 )
 {
     /* Start a persistent session with the broker. */
     startPersistentSession();
@@ -1479,7 +1479,7 @@ TEST( MQTT_Integration, Restore_Session_Duplicate_Incoming_Publish_Qos2 )
  * @brief Verifies that the library supports notifying the broker to retain a PUBLISH message
  * for a topic using the retain flag.
  */
-TEST( MQTT_Integration, Publish_With_Retain_Flag )
+TEST( MQTT_SYSTEM, Publish_With_Retain_Flag )
 {
     /* Publish to a topic with the "retain" flag set. */
     TEST_ASSERT_EQUAL( MQTTSuccess, publishToTopic( &context,
