@@ -276,7 +276,7 @@ static int32_t transportTimeoutSetup( Socket_t tcpSocket,
     TickType_t receiveTimeout = 0, sendTimeout = 0;
     int32_t secureSocketStatus = ( int32_t ) SOCKETS_ERROR_NONE;
 
-    if( tcpSocket == NULL )
+    if( tcpSocket == SOCKETS_INVALID_SOCKET )
     {
         LogError( ( "Unable to set send and receive timeouts: Passed socket is invalid" ) );
         secureSocketStatus = SOCKETS_EINVAL;
