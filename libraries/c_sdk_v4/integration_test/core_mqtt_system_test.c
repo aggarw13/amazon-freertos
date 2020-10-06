@@ -870,7 +870,7 @@ void testSetUp()
 
     /* Establish TLS over TCP connection with retry attempts on failures. */
     TEST_ASSERT_TRUE( connectToServerWithBackoffRetries( &networkContext ) );
-    /*TEST_ASSERT_NOT_NULL( networkContext.pContext ); */
+    TEST_ASSERT_NOT_EQUAL( SOCKETS_INVALID_SOCKET, networkContext.pContext );
 
     /* Establish MQTT session on top of the TCP+TLS connection. */
     establishMqttSession( &context, &networkContext, true, &persistentSession );
