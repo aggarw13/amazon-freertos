@@ -100,7 +100,7 @@ int32_t SecureSocketsTransport_Send( const NetworkContext_t * pNetworkContext,
                     pMessage, bytesToSend, pNetworkContext ) );
         bytesSent = SOCKETS_EINVAL;
     }
-    else if( ( pNetworkContext != NULL ) && ( pNetworkContext->pContext != SOCKETS_INVALID_SOCKET ) )
+    else if( ( pNetworkContext != NULL ) && ( pNetworkContext->pContext == SOCKETS_INVALID_SOCKET ) )
     {
         LogError( ( "Invalid parameter: pNetworkContext->pContext cannot be invalid." ) );
         bytesSent = SOCKETS_EINVAL;
@@ -150,7 +150,7 @@ int32_t SecureSocketsTransport_Recv( const NetworkContext_t * pNetworkContext,
                     pBuffer, bytesToRecv, pNetworkContext ) );
         bytesReceived = SOCKETS_EINVAL;
     }
-    else if( ( pNetworkContext != NULL ) && ( pNetworkContext->pContext != SOCKETS_INVALID_SOCKET ) )
+    else if( ( pNetworkContext != NULL ) && ( pNetworkContext->pContext == SOCKETS_INVALID_SOCKET ) )
     {
         LogError( ( "Invalid parameter: pNetworkContext->pContext cannot be invalid." ) );
         bytesReceived = SOCKETS_EINVAL;
