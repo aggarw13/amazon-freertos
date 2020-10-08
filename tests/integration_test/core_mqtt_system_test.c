@@ -647,6 +647,9 @@ static void eventCallback( MQTTContext_t * pContext,
         /* Terminate TLS session and TCP connection to test session restoration
          * across network connection. */
         ( void ) SecureSocketsTransport_Disconnect( &networkContext );
+
+        /* Add some delay to ensure that the network has been disconnected. */
+        vTaskDelay( pdMS_TO_TICKS( 1000 ) );
     }
     else
     {
