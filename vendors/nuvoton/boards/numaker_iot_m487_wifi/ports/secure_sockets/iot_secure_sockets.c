@@ -433,26 +433,27 @@ int32_t SOCKETS_Recv( Socket_t xSocket,
     /* Check this is a valid socket */
     if( prvIsValidSocket( ulSocketNum ) == pdTRUE )
     {
-        LogDebug( ( "Socket is valid." ) );
+        LogDebug( ( "Socket is valid ." ) );
         pxSecureSocket = &xSockets[ ulSocketNum ];
 
         /* Check that send is allowed on the socket. */
         if( ( ( pxSecureSocket->ulFlags & securesocketsSOCKET_READ_CLOSED_FLAG ) == 0 ) &&
             ( ( pxSecureSocket->ulFlags & securesocketsSOCKET_IS_CONNECTED_FLAG ) != 0 ) )
         {
-            LogDebug( ( "securesocketsSOCKET_READ_CLOSED_FLAG flag check passed" ) );
+            LogDebug( ( "securesocketsSOCKET_READ_CLOSED_FLAG flag check passed " ) );
 
             if( ( pxSecureSocket->ulFlags & securesocketsSOCKET_SECURE_FLAG ) )
             {
-                LogDebug( ( "About to call TLS_Recv" ) );
+                LogDebug( ( "About to call TLS_Recv " ) );
                 /* Receive through TLS pipe, if negotiated. */
                 lSocketRet = TLS_Recv( pxSecureSocket->pvTLSContext, pvBuffer, xBufferLength );
 
-                LogDebug( ( "TLS_Recv return code=%d", lSocketRet ) );
+                LogDebug( ( "TLS_Recv return code=%d ", lSocketRet ) );
 
                 /* Convert the error code. */
                 if( lSocketRet < 0 )
                 {
+                    LogDebug( ( "Setting return code as SOCKETS_TLS_RECV_ERROR " ) );
                     /* TLS_Recv failed. */
                     lSocketRet = SOCKETS_TLS_RECV_ERROR;
                 }
@@ -475,6 +476,7 @@ int32_t SOCKETS_Recv( Socket_t xSocket,
         lSocketRet = SOCKETS_EINVAL;
     }
 
+    LogDebug( ( "SOCKETS_Recv return code=%d ", lSocketRet ) );
     return lSocketRet;
 }
 /*-----------------------------------------------------------*/
