@@ -56,7 +56,7 @@
 #endif
 
 #ifndef LIBRARY_LOG_LEVEL
-    #define LIBRARY_LOG_LEVEL    LOG_INFO
+    #define LIBRARY_LOG_LEVEL    LOG_DEBUG
 #endif
 #include "logging_stack.h"
 
@@ -449,6 +449,7 @@ int32_t SOCKETS_Recv( Socket_t xSocket,
                 lSocketRet = TLS_Recv( pxSecureSocket->pvTLSContext, pvBuffer, xBufferLength );
 
                 LogDebug( ( "TLS_Recv return code=%d", lSocketRet ) );
+
                 /* Convert the error code. */
                 if( lSocketRet < 0 )
                 {
