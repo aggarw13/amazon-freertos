@@ -29,7 +29,7 @@ afr_module_dependencies(
         AFR::freertos_plus_cli
 )
 
-if(TARGET AFR::common_io)
+if(TARGET AFR::common_io::mcu_port)
     afr_module(NAME freertos_cli_plus_uart)
 
     set(inc_dir "${CMAKE_CURRENT_LIST_DIR}/include")
