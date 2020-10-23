@@ -37,17 +37,17 @@
  *
  * Valid values are pdLITTLE_ENDIAN and pdBIG_ENDIAN.
  */
-#define socketsconfigBYTE_ORDER              pdLITTLE_ENDIAN
+#define socketsconfigBYTE_ORDER                   pdLITTLE_ENDIAN
 
 /**
  * @brief Default socket send timeout.
  */
-#define socketsconfigDEFAULT_SEND_TIMEOUT    ( 10000 )
+#define socketsconfigDEFAULT_SEND_TIMEOUT         ( 10000 )
 
 /**
  * @brief Default socket receive timeout.
  */
-#define socketsconfigDEFAULT_RECV_TIMEOUT    ( 10000 )
+#define socketsconfigDEFAULT_RECV_TIMEOUT         ( 10000 )
 
 /**
  * @brief Enable metrics of secure socket.
@@ -57,21 +57,22 @@
 /**
  * @brief The file name for the root of trust certificate.
  */
-#define socketsconfigSECURE_FILE_NAME_ROOTCA            "/certs/RootCA.crt"
+#define socketsconfigSECURE_FILE_NAME_ROOTCA      "/certs/RootCA.crt"
 
 /**
  * @brief Custom root CA.
  */
-#define socketsconfigSECURE_FILE_NAME_CUSTOMROOTCA      "/certs/CustomRootCA.crt"
+/*#define socketsconfigSECURE_FILE_NAME_CUSTOMROOTCA      "/certs/CustomRootCA.crt" */
+#define socketsconfigSECURE_FILE_NAME_CUSTOMROOTCA    socketsconfigSECURE_FILE_NAME_ROOTCA
 
 /**
  * @brief Client certificate.
  */
-#define socketsconfigSECURE_FILE_NAME_CLIENTCERT        "/certs/ClientCert.crt"
+#define socketsconfigSECURE_FILE_NAME_CLIENTCERT      "/certs/ClientCert.crt"
 
 /**
  * @brief Client private key.
  */
-#define socketsconfigSECURE_FILE_NAME_PRIVATEKEY        "/certs/PrivateKey.key"
+#define socketsconfigSECURE_FILE_NAME_PRIVATEKEY      "/certs/PrivateKey.key"
 
 #endif /* AWS_INC_SOCKETS_CONFIG_H_ */
