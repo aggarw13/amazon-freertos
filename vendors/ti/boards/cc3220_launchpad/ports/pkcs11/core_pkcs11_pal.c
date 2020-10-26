@@ -55,6 +55,20 @@
 #include "mbedtls/platform.h"
 #include "mbedtls/entropy.h"
 
+
+#include "logging_levels.h"
+
+/* Logging configuration for the Demo. */
+#ifndef LIBRARY_LOG_NAME
+    #define LIBRARY_LOG_NAME    "MQTT_MutualAuth_Demo"
+#endif
+
+#ifndef LIBRARY_LOG_LEVEL
+    #define LIBRARY_LOG_LEVEL    LOG_INFO
+#endif
+#include "logging_stack.h"
+
+
 enum eObjectHandles
 {
     eInvalidHandle = 0, /* According to PKCS #11 spec, 0 is never a valid object handle. */
@@ -328,6 +342,7 @@ void prvLabelToFilenameHandle( uint8_t * pcLabel,
                          &pkcs11configLABEL_DEVICE_CERTIFICATE_FOR_TLS,
                          sizeof( pkcs11configLABEL_DEVICE_CERTIFICATE_FOR_TLS ) ) )
         {
+            LogInfo( ( "Obtained filename and handle for pkcs11configLABEL_DEVICE_CERTIFICATE_FOR_TLS" ) );
             *pcFileName = socketsconfigSECURE_FILE_NAME_CLIENTCERT;
             *pHandle = eAwsDeviceCertificate;
         }
@@ -335,6 +350,7 @@ void prvLabelToFilenameHandle( uint8_t * pcLabel,
                               &pkcs11configLABEL_DEVICE_PRIVATE_KEY_FOR_TLS,
                               sizeof( pkcs11configLABEL_DEVICE_PRIVATE_KEY_FOR_TLS ) ) )
         {
+            LogInfo( ( "Obtained filename and handle for socketsconfigSECURE_FILE_NAME_PRIVATEKEY" ) );
             *pcFileName = socketsconfigSECURE_FILE_NAME_PRIVATEKEY;
             *pHandle = eAwsDevicePrivateKey;
         }
@@ -342,11 +358,13 @@ void prvLabelToFilenameHandle( uint8_t * pcLabel,
                               &pkcs11configLABEL_ROOT_CERTIFICATE,
                               sizeof( pkcs11configLABEL_ROOT_CERTIFICATE ) ) )
         {
+            LogInfo( ( "Obtained filename and handle for socketsconfigSECURE_FILE_NAME_ROOTCA" ) );
             *pcFileName = socketsconfigSECURE_FILE_NAME_ROOTCA;
             *pHandle = eAwsTrustedServerCertificate;
         }
         else
         {
+            LogError( ( "Failed to obtain filename and handle for PKCS11 handle" ) );
             *pcFileName = NULL;
             *pHandle = eInvalidHandle;
         }
@@ -361,14 +379,17 @@ void prvHandleToFileName( CK_OBJECT_HANDLE pxHandle,
     switch( pxHandle )
     {
         case ( eAwsDeviceCertificate ):
+            LogInfo( ( "Obtained filename for eAwsDeviceCertificate handle" ) );
             *pcFileName = socketsconfigSECURE_FILE_NAME_CLIENTCERT;
             break;
 
         case ( eAwsDevicePrivateKey ):
+            LogInfo( ( "Obtained filename for eAwsDevicePrivateKey handle" ) );
             *pcFileName = socketsconfigSECURE_FILE_NAME_PRIVATEKEY;
             break;
 
         case ( eAwsTrustedServerCertificate ):
+            LogInfo( ( "Obtained filename for eAwsTrustedServerCertificate handle" ) );
             *pcFileName = socketsconfigSECURE_FILE_NAME_ROOTCA;
             break;
 
@@ -474,9 +495,9 @@ CK_OBJECT_HANDLE PKCS11_PAL_FindObject( CK_BYTE_PTR pxLabel,
  * error.
  */
 CK_RV PKCS11_PAL_GetObjectValue( CK_OBJECT_HANDLE xHandle,
-                                      CK_BYTE_PTR * ppucData,
-                                      CK_ULONG_PTR pulDataSize,
-                                      CK_BBOOL * pIsPrivate )
+                                 CK_BYTE_PTR * ppucData,
+                                 CK_ULONG_PTR pulDataSize,
+                                 CK_BBOOL * pIsPrivate )
 {
     CK_RV ulReturn = CKR_OK;
     int32_t iReadBytes = 0;
@@ -649,7 +670,6 @@ CK_OBJECT_HANDLE PKCS11_PAL_SaveObject( CK_ATTRIBUTE_PTR pxLabel,
             {
                 xHandle = eInvalidHandle;
             }
-
         }
 
         if( NULL != pcPemBuffer )
