@@ -303,8 +303,8 @@ int RunHttpsSyncDownloadDemo( bool awsIotMqttMode,
     connConfig.pAddress = pAddress;
     connConfig.addressLen = addressLen;
     connConfig.port = IOT_DEMO_HTTPS_PORT;
-    connConfig.pCaCert = IOT_DEMO_HTTPS_TRUSTED_ROOT_CA;
-    connConfig.caCertLen = sizeof( IOT_DEMO_HTTPS_TRUSTED_ROOT_CA );
+    /* connConfig.pCaCert = IOT_DEMO_HTTPS_TRUSTED_ROOT_CA; */
+    /* connConfig.caCertLen = sizeof( IOT_DEMO_HTTPS_TRUSTED_ROOT_CA ); */
     connConfig.userBuffer.pBuffer = _pConnUserBuffer;
     connConfig.userBuffer.bufferLen = sizeof( _pConnUserBuffer );
     connConfig.pClientCert = ( ( IotNetworkCredentials_t * ) pNetworkCredentialInfo )->pClientCert;
