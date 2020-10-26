@@ -63,6 +63,6 @@
 /**
  * @brief Size of the transport buffer queue to hold the MQTT packets.
  */
-#define democonfigBLE_TRANSPORT_BUFFER_SIZE    ( 256U )
+#define democonfigBLE_TRANSPORT_BUFFER_SIZE   ( 256U )
 
 #endif /* SHADOW_BLE_DEMO_CONFIG_H */
