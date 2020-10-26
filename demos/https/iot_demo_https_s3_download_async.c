@@ -104,7 +104,7 @@
     "Epn3o0WC4zxe9Z2etciefC7IpJ5OCBRLbf1wbWsaY71k5h+3zvDyny67G7fyUIhz\n" \
     "ksLi4xaNmjICq44Y3ekQEe5+NauQrz4wlHrQMz2nZQ/1/I6eYs9HRCwBXbsdtTLS\n" \
     "R9I4LtD+gdwyah617jzV/OeBHRnDJELqYzmp\n"                             \
-    "-----END CERTIFICATE-----\n"
+    "-----END CERTIFICATE-----\n";
 #endif /* ifndef IOT_DEMO_HTTPS_TRUSTED_ROOT_CA */
 
 /* The total number of requests in the pool of HTTPS Client library configurations and handles. In order to send
