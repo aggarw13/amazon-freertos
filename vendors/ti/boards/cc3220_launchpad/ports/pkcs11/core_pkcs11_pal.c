@@ -167,6 +167,8 @@ static CK_RV prvDerToPem( uint8_t * pDerBuffer,
                           size_t * pPemLength,
                           CK_OBJECT_CLASS xObjectType )
 {
+    LogInfo( ( "Called prvDerToPem" ) );
+
     CK_RV xReturn = CKR_OK;
     size_t xTotalPemLength = 0;
     mbedtls_pk_context pk;
@@ -499,6 +501,8 @@ CK_RV PKCS11_PAL_GetObjectValue( CK_OBJECT_HANDLE xHandle,
                                  CK_ULONG_PTR pulDataSize,
                                  CK_BBOOL * pIsPrivate )
 {
+    LogInfo( ( "Called PKCS11_PAL_GetObjectValue" ) );
+
     CK_RV ulReturn = CKR_OK;
     int32_t iReadBytes = 0;
     int32_t iFile = 0;
