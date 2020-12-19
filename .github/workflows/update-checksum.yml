@@ -12,13 +12,8 @@ jobs:
     name: Update Version in source files
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v2
-        with:
-          ref: ${{ github.event.inputs.branch }}
-
       # Setup Python
-      - name: Tool Setup
+      - name: Install Python3
         uses: actions/setup-python@v2
         with:
           python-version: 3.8.5
@@ -26,8 +21,14 @@ jobs:
         env:  
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} 
 
+      - name: Checkout code
+        uses: actions/checkout@v2
+        with:
+          ref: ${{ github.event.inputs.branch }}
+
       - name: Run checksum generator
         run: |
+          ls
           python3 .github/scripts/generate_checksum.py --root ./
           git diff --quiet checksums.json
           
