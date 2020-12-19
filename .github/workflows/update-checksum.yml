@@ -31,7 +31,7 @@ jobs:
           
       - name: Raise Pull Request if checksum file changed
         run: |
-          if (git diff --quiet checksums.json); then
+          if ! (git diff --quiet checksums.json); then
             git config --global user.name "Checksum Updater"
             git checkout -b job/update-checksum-file
             export COMMIT=$(git rev-parse HEAD)
