@@ -27,10 +27,7 @@ jobs:
           ref: ${{ github.event.inputs.branch }}
 
       - name: Run checksum generator
-        run: |
-          ls
-          python3 .github/scripts/generate_checksum.py --root ./
-          git diff --quiet checksums.json
+        run: python3 .github/scripts/generate_checksum.py --root ./
           
       - name: Raise Pull Request if checksum file changed
         run: |
