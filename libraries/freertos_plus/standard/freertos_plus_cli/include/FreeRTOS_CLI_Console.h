@@ -65,7 +65,20 @@ typedef struct xConsoleIO
 
 
 /**
- * The function executes a non-terminating loop to fetch command from the console, parse
+ * @brief The type for the predicate function that is used by the
+ * #FreeRTOS_CLIEnterConsoleLoop console function to determine whether
+ * its loop should exit to terminate the console prompt.
+ *
+ * @param[in] pContext The user context for the predicate function passed
+ * by the #FreeRTOS_CLIEnterConsoleLoop function.
+ *
+ * @return pdFALSE to continue the CLI console loop; otherwise, pdTRUE to
+ * exit from the loop.
+ * */
+typedef BaseType_t (* FreeRTOS_CLIShouldLoopExitFunc)( void * pContext );
+
+/**
+ * @brief The function executes a non-terminating loop to fetch command from the console, parse
  * and execute a matching command from the list of registered commands, and writes the output back
  * to the console. ConsoleIO interface implementation is passed as argument to the function.
  */
@@ -73,8 +86,9 @@ void FreeRTOS_CLIEnterConsoleLoop( xConsoleIO_t consoleIO,
                                    char * pCommandBuffer,
                                    size_t commandBufferLength,
                                    char * pOutputBuffer,
-                                   size_t outputBufferLength );
-
+                                   size_t outputBufferLength,
+                                   FreeRTOS_CLIShouldLoopExitFunc loopCondition,
+                                   void * pContextForPredicate );
 
 /**
  * @brief Adds incoming data from console input interface (@p pConsoleInput)

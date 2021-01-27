@@ -56,7 +56,9 @@ void FreeRTOS_CLIEnterConsoleLoop( xConsoleIO_t consoleIO,
                                    char * pCommandBuffer,
                                    size_t commandBufferLength,
                                    char * pOutputBuffer,
-                                   size_t outputBufferLength )
+                                   size_t outputBufferLength,
+                                   FreeRTOS_CLIShouldLoopExitFunc loopExitPred,
+                                   void * pContextForPredicate )
 {
     int32_t bytesRead;
 
@@ -69,7 +71,7 @@ void FreeRTOS_CLIEnterConsoleLoop( xConsoleIO_t consoleIO,
 
     consoleIO.write( pcStartMessage, strlen( pcStartMessage ) );
 
-    for( ; ; )
+    while( loopExitPred( pContextForPredicate ) == pdFALSE )
     {
         /* Read characters to input buffer. */
         bytesRead = consoleIO.read( cInputBuffer, cmdMAX_INPUT_BUFFER_SIZE - 1 );

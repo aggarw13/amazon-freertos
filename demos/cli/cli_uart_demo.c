@@ -302,6 +302,12 @@ static BaseType_t prvTaskStatsCommand( char * pcWriteBuffer,
     return pdFALSE;
 }
 
+BaseType_t loopForEverPredicate( void * pContext )
+{
+    ( void ) pContext;
+
+    return pdFALSE;
+}
 
 static void prvRegisterCLICommands( void )
 {
@@ -331,7 +337,13 @@ int vRunCLIUartDemo( bool awsIotMqttMode,
     configPRINTF( ( "Welcome to FreeRTOS CLI demo\r\n " ) );
 
     /* Run a non-terminating loop on the demo task to wait for commands from the UART console. */
-    FreeRTOS_CLIEnterConsoleLoop( uartConsoleIO, cCommandBuffer, cmdMAX_INPUT_SIZE, cOutputBuffer, cmdMAX_OUTPUT_SIZE );
+    FreeRTOS_CLIEnterConsoleLoop( uartConsoleIO,
+                                  cCommandBuffer,
+                                  cmdMAX_INPUT_SIZE,
+                                  cOutputBuffer,
+                                  cmdMAX_OUTPUT_SIZE,
+                                  loopForEverPredicate,
+                                  NULL );
 
     return 0;
 }
