@@ -422,4 +422,6 @@
     #define UNTESTED_FUNCTION()
 #endif
 
+#define LOGGING_ENABLE_METADATA_WITH_C99_AND_GNU_EXTENSION  (1) 
+
 #endif /* #define FREERTOS_CONFIG_H */

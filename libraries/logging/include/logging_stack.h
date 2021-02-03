@@ -59,12 +59,22 @@
     #define SdkLog( string )
 #endif
 
-/* @cond DOXYGEN_IGNORE */
-#define SdkAssembledAndLog( metadata, message )                 \
-    do { acquireMutexForLogBuffer(); createLogMessage metadata; \
-         createLogMessage message;  createLogMessage( "\r\n" ); \
-         releaseMutexOfLogBuffer(); } while( 0 )                \
-/** @endcond */
+#if defined( LOGGING_ENABLE_METADATA_WITH_C99_AND_GNU_EXTENSION ) && ( LOGGING_ENABLE_METADATA_WITH_C99_AND_GNU_EXTENSION == 1 )
+    #define SdkLogError( message )           SdkLogErrorC99 message
+    #define SdkLogErrorC99( format, ... )    SdkLog( ( "[ERROR] [%s] [%s:%d]" format "\r\n", LIBRARY_LOG_NAME, FILENAME, __LINE__, ## __VA_ARGS__ ) )
+    #define SdkLogWarn( message )            SdkLogWarnC99 message
+    #define SdkLogWarnC99( format, ... )     SdkLog( ( "[WARN] [%s] [%s:%d]" format "\r\n", LIBRARY_LOG_NAME, FILENAME, __LINE__, ## __VA_ARGS__ ) )
+    #define SdkLogInfo( message )            SdkLogInfoC99 message
+    #define SdkLogInfoC99( format, ... )     SdkLog( ( "[INFO] [%s] [%s:%d]" format "\r\n", LIBRARY_LOG_NAME, FILENAME, __LINE__, ## __VA_ARGS__ ) )
+    #define SdkLogDebug( message )           SdkLogDebugC99 message
+    #define SdkLogDebugC99( format, ... )    SdkLog( ( "[DEBUG] [%s] [%s:%d]" format "\r\n", LIBRARY_LOG_NAME, FILENAME, __LINE__, ## __VA_ARGS__ ) )
+#else
+    #define SdkLogError( message )           SdkLog( message )
+    #define SdkLogWarn( message )            SdkLog( message )
+    #define SdkLogInfo( message )            SdkLog( message )
+    #define SdkLogDebug( message )           SdkLog( message )
+
+#endif /* if defined( LOGGING_METADATA_WITH_C99_SUPPORT ) && ( LOGGING_METADATA_WITH_C99_SUPPORT == 1 ) */
 
 /* Check that LIBRARY_LOG_LEVEL is defined and has a valid value. */
 #if !defined( LIBRARY_LOG_LEVEL ) ||       \
@@ -79,28 +89,28 @@
 #else
     #if LIBRARY_LOG_LEVEL == LOG_DEBUG
         /* All log level messages will logged. */
-        #define LogError( message )    SdkAssembledAndLog( ( "[ERROR] [%s] "LOG_METADATA_FORMAT, LIBRARY_LOG_NAME, LOG_METADATA_ARGS ), message )
-        #define LogWarn( message )     SdkAssembledAndLog( ( "[WARN] [%s] "LOG_METADATA_FORMAT, LIBRARY_LOG_NAME, LOG_METADATA_ARGS ), message )
-        #define LogInfo( message )     SdkAssembledAndLog( ( "[INFO] [%s] "LOG_METADATA_FORMAT, LIBRARY_LOG_NAME, LOG_METADATA_ARGS ), message )
-        #define LogDebug( message )    SdkAssembledAndLog( ( "[DEBUG] [%s] "LOG_METADATA_FORMAT, LIBRARY_LOG_NAME, LOG_METADATA_ARGS ), message )
+        #define LogError( message )    SdkLogError( message )
+        #define LogWarn( message )     SdkLogWarn( message )
+        #define LogInfo( message )     SdkLogInfo( message )
+        #define LogDebug( message )    SdkLogDebug( message )
 
     #elif LIBRARY_LOG_LEVEL == LOG_INFO
         /* Only INFO, WARNING and ERROR messages will be logged. */
-        #define LogError( message )    SdkAssembledAndLog( ( "[ERROR] [%s] "LOG_METADATA_FORMAT, LIBRARY_LOG_NAME, LOG_METADATA_ARGS ), message )
-        #define LogWarn( message )     SdkAssembledAndLog( ( "[WARN] [%s] "LOG_METADATA_FORMAT, LIBRARY_LOG_NAME, LOG_METADATA_ARGS ), message )
-        #define LogInfo( message )     SdkAssembledAndLog( ( "[INFO] [%s] "LOG_METADATA_FORMAT, LIBRARY_LOG_NAME, LOG_METADATA_ARGS ), message )
+        #define LogError( message )    SdkLogError( message )
+        #define LogWarn( message )     SdkLogWarn( message )
+        #define LogInfo( message )     SdkLogInfo( message )
         #define LogDebug( message )
 
     #elif LIBRARY_LOG_LEVEL == LOG_WARN
         /* Only WARNING and ERROR messages will be logged.*/
-        #define LogError( message )    SdkAssembledAndLog( ( "[ERROR] [%s] "LOG_METADATA_FORMAT, LIBRARY_LOG_NAME, LOG_METADATA_ARGS ), message )
-        #define LogWarn( message )     SdkAssembledAndLog( ( "[WARN] [%s] "LOG_METADATA_FORMAT, LIBRARY_LOG_NAME, LOG_METADATA_ARGS ), message )
+        #define LogError( message )    SdkLogError( message )
+        #define LogWarn( message )     SdkLogWarn( message )
         #define LogInfo( message )
         #define LogDebug( message )
 
     #elif LIBRARY_LOG_LEVEL == LOG_ERROR
         /* Only ERROR messages will be logged. */
-        #define LogError( message )    SdkAssembledAndLog( ( "[ERROR] [%s] "LOG_METADATA_FORMAT, LIBRARY_LOG_NAME, LOG_METADATA_ARGS ), message )
+        #define LogError( message )    SdkLogError( message )
         #define LogWarn( message )
         #define LogInfo( message )
         #define LogDebug( message )
