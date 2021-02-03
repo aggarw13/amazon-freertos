@@ -61,18 +61,18 @@
 
 #if defined( LOGGING_ENABLE_METADATA_WITH_C99_AND_GNU_EXTENSION ) && ( LOGGING_ENABLE_METADATA_WITH_C99_AND_GNU_EXTENSION == 1 )
     #define SdkLogError( message )           SdkLogErrorC99 message
-    #define SdkLogErrorC99( format, ... )    SdkLog( ( "[ERROR] [%s] [%s:%d]" format "\r\n", LIBRARY_LOG_NAME, FILENAME, __LINE__, ## __VA_ARGS__ ) )
+    #define SdkLogErrorC99( format, ... )    SdkLog( ( "[ERROR] [%s] [%s:%d] " format "\r\n", LIBRARY_LOG_NAME, FILENAME, __LINE__, ## __VA_ARGS__ ) )
     #define SdkLogWarn( message )            SdkLogWarnC99 message
-    #define SdkLogWarnC99( format, ... )     SdkLog( ( "[WARN] [%s] [%s:%d]" format "\r\n", LIBRARY_LOG_NAME, FILENAME, __LINE__, ## __VA_ARGS__ ) )
+    #define SdkLogWarnC99( format, ... )     SdkLog( ( "[WARN] [%s] [%s:%d] " format "\r\n", LIBRARY_LOG_NAME, FILENAME, __LINE__, ## __VA_ARGS__ ) )
     #define SdkLogInfo( message )            SdkLogInfoC99 message
-    #define SdkLogInfoC99( format, ... )     SdkLog( ( "[INFO] [%s] [%s:%d]" format "\r\n", LIBRARY_LOG_NAME, FILENAME, __LINE__, ## __VA_ARGS__ ) )
+    #define SdkLogInfoC99( format, ... )     SdkLog( ( "[INFO] [%s] [%s:%d] " format "\r\n", LIBRARY_LOG_NAME, FILENAME, __LINE__, ## __VA_ARGS__ ) )
     #define SdkLogDebug( message )           SdkLogDebugC99 message
-    #define SdkLogDebugC99( format, ... )    SdkLog( ( "[DEBUG] [%s] [%s:%d]" format "\r\n", LIBRARY_LOG_NAME, FILENAME, __LINE__, ## __VA_ARGS__ ) )
+    #define SdkLogDebugC99( format, ... )    SdkLog( ( "[DEBUG] [%s] [%s:%d] " format "\r\n", LIBRARY_LOG_NAME, FILENAME, __LINE__, ## __VA_ARGS__ ) )
 #else
-    #define SdkLogError( message )           SdkLog( message )
-    #define SdkLogWarn( message )            SdkLog( message )
-    #define SdkLogInfo( message )            SdkLog( message )
-    #define SdkLogDebug( message )           SdkLog( message )
+    #define SdkLogError( message )           vLoggingPrintfError message
+    #define SdkLogWarn( message )            vLoggingPrintfWarn message
+    #define SdkLogInfo( message )            vLoggingPrintfInfo message
+    #define SdkLogDebug( message )           vLoggingPrintfDebug message
 
 #endif /* if defined( LOGGING_METADATA_WITH_C99_SUPPORT ) && ( LOGGING_METADATA_WITH_C99_SUPPORT == 1 ) */
 
