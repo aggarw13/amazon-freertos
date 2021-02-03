@@ -253,7 +253,7 @@ void vLoggingPrintfError( const char * pcFormat,
     va_list args;
 
     va_start( args, pcFormat );
-    vLoggingPrintCommon( LOG_ERROR, pcFormat, args );
+    vLoggingPrintfCommon( LOG_ERROR, pcFormat, args );
 
     va_end( args );
 }
@@ -264,7 +264,7 @@ void vLoggingPrintfWarn( const char * pcFormat,
     va_list args;
 
     va_start( args, pcFormat );
-    vLoggingPrintCommon( LOG_WARN, pcFormat, args );
+    vLoggingPrintfCommon( LOG_WARN, pcFormat, args );
 
     va_end( args );
 }
@@ -275,7 +275,7 @@ void vLoggingPrintfInfo( const char * pcFormat,
     va_list args;
 
     va_start( args, pcFormat );
-    vLoggingPrintCommon( LOG_INFO, pcFormat, args );
+    vLoggingPrintfCommon( LOG_INFO, pcFormat, args );
 }
 
 void vLoggingPrintfDebug( const char * pcFormat,
@@ -284,7 +284,7 @@ void vLoggingPrintfDebug( const char * pcFormat,
     va_list args;
 
     va_start( args, pcFormat );
-    vLoggingPrintCommon( LOG_DEBUG, pcFormat, args );
+    vLoggingPrintfCommon( LOG_DEBUG, pcFormat, args );
 
     va_end( args );
 }
@@ -306,7 +306,7 @@ void vLoggingPrintf( const char * pcFormat,
     va_list args;
 
     va_start( args, pcFormat );
-    vLoggingPrintCommon( LOG_NONE, pcFormat, args );
+    vLoggingPrintfCommon( LOG_NONE, pcFormat, args );
 
     va_end( args );
 }
