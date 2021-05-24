@@ -423,7 +423,7 @@ static TransportSocketStatus_t prvConnectToServerWithBackoffRetries( NetworkCont
     /* Initialize information to connect to the MQTT broker. */
     xServerInfo.pHostName = democonfigMQTT_BROKER_ENDPOINT;
     xServerInfo.hostNameLength = sizeof( democonfigMQTT_BROKER_ENDPOINT ) - 1U;
-    xServerInfo.port = democonfigMQTT_BROKER_PORT;
+    xServerInfo.port = 443;
 
     /* Set the Secure Socket configurations. */
     xSocketConfig.enableTls = true;
