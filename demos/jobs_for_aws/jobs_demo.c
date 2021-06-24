@@ -316,6 +316,14 @@ static BaseType_t xExitActionJobReceived = pdFALSE;
  */
 static BaseType_t xDemoEncounteredError = pdFALSE;
 
+/**
+ * @brief A global flag which represents whether the first job has been received
+ * from AWS IoT Jobs service in an iteration of the demo run (i.e. the outer demo loop).
+ *
+ * @note When this flag is set, the demo terminates execution.
+ */
+static BaseType_t xFirstJobReceived = pdFALSE;
+
 /*-----------------------------------------------------------*/
 
 /**
@@ -628,6 +636,13 @@ static void prvNextJobHandler( MQTTPublishInfo_t * pxPublishInfo )
         }
         else
         {
+            /* If this is the first time we're receiving a job in the outer demo loop's iteration, set
+            * the global flag to indicate reception of the first job from the AWS IoT Jobs service. */
+            if( xFirstJobReceived == pdFALSE )
+            {
+                xFirstJobReceived = pdTRUE;
+            }
+
             char * pcJobDocLoc = NULL;
             size_t ulJobDocLength = 0UL;
 
@@ -865,34 +880,36 @@ int RunJobsDemo( bool awsIotMqttMode,
             }
         }
 
-        if( xDemoStatus == pdPASS )
-        {
-            /* Publish to AWS IoT Jobs on the DescribeJobExecution API to request the next pending job.
-             *
-             * Note: It is not required to make MQTT subscriptions to the response topics of the
-             * DescribeJobExecution API because the AWS IoT Jobs service sends responses for
-             * the PUBLISH commands on the same MQTT connection irrespective of whether the client has subscribed
-             * to the response topics or not.
-             * This demo processes incoming messages from the response topics of the API in the prvEventCallback()
-             * handler that is supplied to the coreMQTT library. */
-            if( PublishToTopic( &xMqttContext,
-                                DESCRIBE_NEXT_JOB_TOPIC( democonfigTHING_NAME ),
-                                sizeof( DESCRIBE_NEXT_JOB_TOPIC( democonfigTHING_NAME ) ) - 1,
-                                NULL,
-                                0 ) != pdPASS )
-            {
-                xDemoStatus = pdFAIL;
-                LogError( ( "Failed to publish to DescribeJobExecution API of AWS IoT Jobs service: "
-                            "Topic=%s", DESCRIBE_NEXT_JOB_TOPIC( democonfigTHING_NAME ) ) );
-            }
-        }
-
         /* Keep on running the demo until we receive a job for the "exit" action to exit the demo. */
         while( ( xExitActionJobReceived == pdFALSE ) &&
                ( xDemoEncounteredError == pdFALSE ) &&
                ( xDemoStatus == pdPASS ) )
         {
             MQTTStatus_t xMqttStatus = MQTTSuccess;
+
+            /* Explicitly request for the next pending job if a Job has not been received through the
+             * NextJobExecutionChanged API from the AWS IoT Jobs service. */
+            if( xFirstJobReceived == pdFALSE )
+            {
+                /* Publish to AWS IoT Jobs on the DescribeJobExecution API to request the next pending job.
+                 *
+                 * Note: It is not required to make MQTT subscriptions to the response topics of the
+                 * DescribeJobExecution API because the AWS IoT Jobs service sends responses for
+                 * the PUBLISH commands on the same MQTT connection irrespective of whether the client has subscribed
+                 * to the response topics or not.
+                 * This demo processes incoming messages from the response topics of the API in the prvEventCallback()
+                 * handler that is supplied to the coreMQTT library. */
+                if( PublishToTopic( &xMqttContext,
+                                    DESCRIBE_NEXT_JOB_TOPIC( democonfigTHING_NAME ),
+                                    sizeof( DESCRIBE_NEXT_JOB_TOPIC( democonfigTHING_NAME ) ) - 1,
+                                    NULL,
+                                    0 ) != pdPASS )
+                {
+                    xDemoStatus = pdFAIL;
+                    LogError( ( "Failed to publish to DescribeJobExecution API of AWS IoT Jobs service: "
+                                "Topic=%s", DESCRIBE_NEXT_JOB_TOPIC( democonfigTHING_NAME ) ) );
+                }
+            }
 
             /* Check if we have notification for the next pending job in the queue from the
              * NextJobExecutionChanged API of the AWS IoT Jobs service. */
@@ -956,6 +973,7 @@ int RunJobsDemo( bool awsIotMqttMode,
             /* Clear the flag that indicates that indicates the demo error
              * before attempting a retry. */
             xDemoEncounteredError = pdFALSE;
+            xFirstJobReceived = pdFALSE;
 
             LogInfo( ( "A short delay before the next demo iteration." ) );
             vTaskDelay( DELAY_BETWEEN_DEMO_ITERATIONS_TICKS );
