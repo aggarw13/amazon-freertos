@@ -904,6 +904,8 @@ int RunJobsDemo( bool awsIotMqttMode,
                 LogError( ( "Failed to receive notification about next pending job: "
                             "MQTT_ProcessLoop failed" ) );
             }
+
+            vTaskDelay( pdMS_TO_TICKS( 5 ) );
         }
 
         /* Increment the demo run count. */
