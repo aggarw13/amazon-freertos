@@ -935,8 +935,8 @@ BaseType_t TLS_Connect( void * pvContext )
                     TLS_PRINT( ( "ERROR: The handshake failed and it is likely "
                                  "due to a failure in PKCS #11. Consider enabling "
                                  "error logging in PKCS #11 or checking if your device "
-                                 "is properly provisioned with client credentials. "
-                                 "PKCS #11 error=0x(%0X). TLS handshake error=%s : %s \r\n",
+                                 "is properly provisioned with client credentials. "));
+                    TLS_PRINT(( "PKCS #11 error=0x(%0X). TLS handshake error=%s : %s \r\n",
                                  xPKCSResult,
                                  mbedtlsHighLevelCodeOrDefault( xResult ),
                                  mbedtlsLowLevelCodeOrDefault( xResult ) ) );
