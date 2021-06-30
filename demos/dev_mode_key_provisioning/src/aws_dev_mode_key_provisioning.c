@@ -69,7 +69,7 @@ extern void vLoggingPrint( const char * pcFormat );
 
 /* Developer convenience override, for lab testing purposes, for generating
  * a new default key pair, regardless of whether an existing key pair is present. */
-#define keyprovisioningFORCE_GENERATE_NEW_KEY_PAIR    0
+#define keyprovisioningFORCE_GENERATE_NEW_KEY_PAIR    1
 
 /* Internal structure for parsing RSA keys. */
 
@@ -1183,6 +1183,7 @@ CK_RV xProvisionDevice( CK_SESSION_HANDLE xSession,
 
     if( ( xResult == CKR_OK ) && ( CK_TRUE == xKeyPairGenerationMode ) )
     {
+        configPRINTF(("Calling xProvisionGenerateKeyPairEC to generate key pair"));
         /* Generate a new default key pair. */
         xResult = xProvisionGenerateKeyPairEC( xSession,
                                                ( uint8_t * ) pkcs11configLABEL_DEVICE_PRIVATE_KEY_FOR_TLS,
@@ -1258,7 +1259,9 @@ CK_RV xProvisionDevice( CK_SESSION_HANDLE xSession,
 
 /* Perform device provisioning using the specified TLS client credentials. */
 CK_RV vAlternateKeyProvisioning( ProvisioningParams_t * xParams )
-{
+{   
+    configPRINTF(("Entered vAlternateKeyProvisioning"));
+
     CK_RV xResult = CKR_OK;
     CK_FUNCTION_LIST_PTR pxFunctionList = NULL;
     CK_SESSION_HANDLE xSession = 0;
@@ -1270,14 +1273,23 @@ CK_RV vAlternateKeyProvisioning( ProvisioningParams_t * xParams )
     {
         xResult = xInitializePkcs11Token();
     }
+    else
+    {
+        configPRINTF(("xInitializePkcs11Token failed"));
+    }
 
     if( xResult == CKR_OK )
     {
         xResult = xInitializePkcs11Session( &xSession );
     }
+    else
+    {
+        configPRINTF(("xInitializePkcs11Session failed"));
+    }
 
     if( xResult == CKR_OK )
     {
+        configPRINTF(("Value of keyprovisioningFORCE_GENERATE_NEW_KEY_PAIR is %d",keyprovisioningFORCE_GENERATE_NEW_KEY_PAIR));
         xResult = xProvisionDevice( xSession, xParams );
 
         pxFunctionList->C_CloseSession( xSession );
@@ -1338,6 +1350,7 @@ CK_RV vDevModeKeyProvisioning( void )
         xParams.pucClientCertificate = NULL;
     }
 
+    configPRINTF(("Calling vAlternateKeyProvisioning for generating key-pair"));
     return vAlternateKeyProvisioning( &xParams );
 }
 
