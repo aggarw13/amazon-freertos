@@ -1079,6 +1079,12 @@ CK_RV xProvisionDevice( CK_SESSION_HANDLE xSession,
 
     xResult = C_GetFunctionList( &pxFunctionList );
 
+    #define pkcs11configIMPORT_PRIVATE_KEYS_SUPPORTED 0
+
+    configPRINTF(("Value of macros\npkcs11configIMPORT_PRIVATE_KEYS_SUPPORTED = %d\npkcs11configIMPORT_PRIVATE_KEYS_SUPPORTED= %d\n", 
+    pkcs11configIMPORT_PRIVATE_KEYS_SUPPORTED,
+    pkcs11configIMPORT_PRIVATE_KEYS_SUPPORTED));
+
     #if ( pkcs11configIMPORT_PRIVATE_KEYS_SUPPORTED == 1 )
 
         /* Attempt to clean-up old crypto objects, but only if private key import is
@@ -1096,65 +1102,6 @@ CK_RV xProvisionDevice( CK_SESSION_HANDLE xSession,
             }
         }
     #endif /* if ( pkcs11configIMPORT_PRIVATE_KEYS_SUPPORTED == 1 ) */
-
-    /* If a client certificate has been provided by the caller, attempt to
-     * import it. */
-    if( ( xResult == CKR_OK ) && ( NULL != pxParams->pucClientCertificate ) )
-    {
-        xResult = xProvisionCertificate( xSession,
-                                         pxParams->pucClientCertificate,
-                                         pxParams->ulClientCertificateLength,
-                                         ( uint8_t * ) pkcs11configLABEL_DEVICE_CERTIFICATE_FOR_TLS,
-                                         &xObject );
-
-        if( ( xResult != CKR_OK ) || ( xObject == CK_INVALID_HANDLE ) )
-        {
-            configPRINTF( ( "ERROR: Failed to provision device certificate. %d \r\n", xResult ) );
-        }
-    }
-
-    #if ( pkcs11configIMPORT_PRIVATE_KEYS_SUPPORTED == 1 )
-
-        /* If this application supports importing private keys, and if a private
-         * key has been provided by the caller, attempt to import it. */
-        if( ( xResult == CKR_OK ) && ( NULL != pxParams->pucClientPrivateKey ) )
-        {
-            xResult = xProvisionPrivateKey( xSession,
-                                            pxParams->pucClientPrivateKey,
-                                            pxParams->ulClientPrivateKeyLength,
-                                            ( uint8_t * ) pkcs11configLABEL_DEVICE_PRIVATE_KEY_FOR_TLS,
-                                            &xObject );
-
-            if( ( xResult != CKR_OK ) || ( xObject == CK_INVALID_HANDLE ) )
-            {
-                configPRINTF( ( "ERROR: Failed to provision device private key with status %d.\r\n", xResult ) );
-            }
-            else
-            {
-                xImportedPrivateKey = CK_TRUE;
-            }
-        }
-    #endif /* if ( pkcs11configIMPORT_PRIVATE_KEYS_SUPPORTED == 1 ) */
-
-    /* If a Just-in-Time Provisioning certificate has been provided by the
-     * caller, attempt to import it. Not all crypto tokens
-     * and PKCS #11 module implementations provide storage for this particular
-     * object. In that case, the statically defined object, if any, will be used
-     * during TLS session negotiation with AWS IoT. */
-    if( ( xResult == CKR_OK ) && ( NULL != pxParams->pucJITPCertificate ) )
-    {
-        xResult = xProvisionCertificate( xSession,
-                                         pxParams->pucJITPCertificate,
-                                         pxParams->ulJITPCertificateLength,
-                                         ( uint8_t * ) pkcs11configLABEL_JITP_CERTIFICATE,
-                                         &xObject );
-
-        if( xResult == CKR_DEVICE_MEMORY )
-        {
-            xResult = CKR_OK;
-            configPRINTF( ( "Warning: no persistent storage is available for the JITP certificate. The certificate in aws_clientcredential_keys.h will be used instead.\r\n" ) );
-        }
-    }
 
     /* Check whether a key pair is now present. In order to support X.509
      * certificate enrollment, the public and private key objects must both be
@@ -1214,6 +1161,71 @@ CK_RV xProvisionDevice( CK_SESSION_HANDLE xSession,
               ( CK_INVALID_HANDLE == xProvisionedState.xPublicKey ) ) )
         {
             xResult = CKR_KEY_HANDLE_INVALID;
+        }
+    }
+
+	    /* If a client certificate has been provided by the caller, attempt to
+     * import it. */
+    if( ( xResult == CKR_OK ) && ( NULL != pxParams->pucClientCertificate ) )
+    {
+        configPRINTF(("Provisioning SE with following certificate\n"));
+        configPRINTF(("%.*s\n", pxParams->ulClientCertificateLength - 1, pxParams->pucClientCertificate));
+
+        xResult = xProvisionCertificate( xSession,
+                                         pxParams->pucClientCertificate,
+                                         pxParams->ulClientCertificateLength,
+                                         ( uint8_t * ) pkcs11configLABEL_DEVICE_CERTIFICATE_FOR_TLS,
+                                         &xObject );
+
+        if( ( xResult != CKR_OK ) || ( xObject == CK_INVALID_HANDLE ) )
+        {
+            configPRINTF( ( "ERROR: Failed to provision device certificate. %d \r\n", xResult ) );
+        }
+    }
+
+    #if ( pkcs11configIMPORT_PRIVATE_KEYS_SUPPORTED == 1 )
+
+        /* If this application supports importing private keys, and if a private
+         * key has been provided by the caller, attempt to import it. */
+        if( ( xResult == CKR_OK ) && ( NULL != pxParams->pucClientPrivateKey ) )
+        {
+            configPRINTF(("Provisioning SE with following private key\n"));
+            configPRINTF(("%.*s\n", pxParams->ulClientPrivateKeyLength - 1, pxParams->pucClientPrivateKey));
+
+            xResult = xProvisionPrivateKey( xSession,
+                                            pxParams->pucClientPrivateKey,
+                                            pxParams->ulClientPrivateKeyLength,
+                                            ( uint8_t * ) pkcs11configLABEL_DEVICE_PRIVATE_KEY_FOR_TLS,
+                                            &xObject );
+
+            if( ( xResult != CKR_OK ) || ( xObject == CK_INVALID_HANDLE ) )
+            {
+                configPRINTF( ( "ERROR: Failed to provision device private key with status %d.\r\n", xResult ) );
+            }
+            else
+            {
+                xImportedPrivateKey = CK_TRUE;
+            }
+        }
+    #endif /* if ( pkcs11configIMPORT_PRIVATE_KEYS_SUPPORTED == 1 ) */
+
+    /* If a Just-in-Time Provisioning certificate has been provided by the
+     * caller, attempt to import it. Not all crypto tokens
+     * and PKCS #11 module implementations provide storage for this particular
+     * object. In that case, the statically defined object, if any, will be used
+     * during TLS session negotiation with AWS IoT. */
+    if( ( xResult == CKR_OK ) && ( NULL != pxParams->pucJITPCertificate ) )
+    {
+        xResult = xProvisionCertificate( xSession,
+                                         pxParams->pucJITPCertificate,
+                                         pxParams->ulJITPCertificateLength,
+                                         ( uint8_t * ) pkcs11configLABEL_JITP_CERTIFICATE,
+                                         &xObject );
+
+        if( xResult == CKR_DEVICE_MEMORY )
+        {
+            xResult = CKR_OK;
+            configPRINTF( ( "Warning: no persistent storage is available for the JITP certificate. The certificate in aws_clientcredential_keys.h will be used instead.\r\n" ) );
         }
     }
 

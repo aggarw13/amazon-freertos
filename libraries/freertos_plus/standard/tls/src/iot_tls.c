@@ -469,6 +469,11 @@ static int prvReadCertificateIntoContext( TLSContext_t * pxTlsContext,
                                                                                        1 );
     }
 
+    uint8_t * cert = xTemplate.pValue;
+    TLS_PRINT(("Certificate len: %d\n  Beginning of Cert: %02x %02x %02x %02x %02x %02x\n End of Cert: %02x %02x %02x\n", xTemplate.ulValueLen, 
+        cert[0], cert[1], cert[2], cert[3], cert[4], cert[5], 
+        cert[xTemplate.ulValueLen - 3], cert[xTemplate.ulValueLen - 2], cert[xTemplate.ulValueLen - 1]));
+
     /* Decode the certificate. */
     if( 0 == xResult )
     {
@@ -590,31 +595,31 @@ static int prvInitializeClientCredential( TLSContext_t * pxCtx )
 
     /* Add a Just-in-Time Registration (JITR) device issuer certificate, if
      * present, to the TLS context handle. */
-    if( xResult == CKR_OK )
-    {
-        /* Prioritize a statically defined certificate over one in storage. */
-        if( ( NULL != pcJitrCertificate ) &&
-            ( 0 != strcmp( "", pcJitrCertificate ) ) )
-        {
-            xResult = mbedtls_x509_crt_parse( &pxCtx->xMbedX509Cli,
-                                              ( const unsigned char * ) pcJitrCertificate,
-                                              1 + strlen( pcJitrCertificate ) );
-        }
-        else
-        {
-            /* Check for a device JITR certificate in storage. */
-            xResult = prvReadCertificateIntoContext( pxCtx,
-                                                     pkcs11configLABEL_JITP_CERTIFICATE,
-                                                     CKO_CERTIFICATE,
-                                                     &pxCtx->xMbedX509Cli );
+    // if( xResult == CKR_OK )
+    // {
+    //     /* Prioritize a statically defined certificate over one in storage. */
+    //     if( ( NULL != pcJitrCertificate ) &&
+    //         ( 0 != strcmp( "", pcJitrCertificate ) ) )
+    //     {
+    //         xResult = mbedtls_x509_crt_parse( &pxCtx->xMbedX509Cli,
+    //                                           ( const unsigned char * ) pcJitrCertificate,
+    //                                           1 + strlen( pcJitrCertificate ) );
+    //     }
+    //     else
+    //     {
+    //         /* Check for a device JITR certificate in storage. */
+    //         xResult = prvReadCertificateIntoContext( pxCtx,
+    //                                                  pkcs11configLABEL_JITP_CERTIFICATE,
+    //                                                  CKO_CERTIFICATE,
+    //                                                  &pxCtx->xMbedX509Cli );
 
-            /* It is optional to have a JITR certificate in storage. */
-            if( CKR_OBJECT_HANDLE_INVALID == xResult )
-            {
-                xResult = CKR_OK;
-            }
-        }
-    }
+    //         /* It is optional to have a JITR certificate in storage. */
+    //         if( CKR_OBJECT_HANDLE_INVALID == xResult )
+    //         {
+    //             xResult = CKR_OK;
+    //         }
+    //     }
+    // }
 
     /* Attach the client certificate(s) and private key to the TLS configuration. */
     if( 0 == xResult )
