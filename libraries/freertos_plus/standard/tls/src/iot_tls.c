@@ -476,6 +476,10 @@ static int prvReadCertificateIntoContext( TLSContext_t * pxTlsContext,
                                           ( const unsigned char * ) xTemplate.pValue,
                                           xTemplate.ulValueLen );
     }
+    else
+    {
+        TLS_PRINT( ( "Failed to obtain certificate for label: %s", pcLabelName ) );
+    }
 
     /* Free memory. */
     if( NULL != xTemplate.pValue )
@@ -590,31 +594,31 @@ static int prvInitializeClientCredential( TLSContext_t * pxCtx )
 
     /* Add a Just-in-Time Registration (JITR) device issuer certificate, if
      * present, to the TLS context handle. */
-    if( xResult == CKR_OK )
-    {
-        /* Prioritize a statically defined certificate over one in storage. */
-        if( ( NULL != pcJitrCertificate ) &&
-            ( 0 != strcmp( "", pcJitrCertificate ) ) )
-        {
-            xResult = mbedtls_x509_crt_parse( &pxCtx->xMbedX509Cli,
-                                              ( const unsigned char * ) pcJitrCertificate,
-                                              1 + strlen( pcJitrCertificate ) );
-        }
-        else
-        {
-            /* Check for a device JITR certificate in storage. */
-            xResult = prvReadCertificateIntoContext( pxCtx,
-                                                     pkcs11configLABEL_JITP_CERTIFICATE,
-                                                     CKO_CERTIFICATE,
-                                                     &pxCtx->xMbedX509Cli );
+    /* if( xResult == CKR_OK ) */
+    /* { */
+    /*     / * Prioritize a statically defined certificate over one in storage. * / */
+    /*     if( ( NULL != pcJitrCertificate ) && */
+    /*         ( 0 != strcmp( "", pcJitrCertificate ) ) ) */
+    /*     { */
+    /*         xResult = mbedtls_x509_crt_parse( &pxCtx->xMbedX509Cli, */
+    /*                                           ( const unsigned char * ) pcJitrCertificate, */
+    /*                                           1 + strlen( pcJitrCertificate ) ); */
+    /*     } */
+    /*     else */
+    /*     { */
+    /*         / * Check for a device JITR certificate in storage. * / */
+    /*         xResult = prvReadCertificateIntoContext( pxCtx, */
+    /*                                                  pkcs11configLABEL_JITP_CERTIFICATE, */
+    /*                                                  CKO_CERTIFICATE, */
+    /*                                                  &pxCtx->xMbedX509Cli ); */
 
-            /* It is optional to have a JITR certificate in storage. */
-            if( CKR_OBJECT_HANDLE_INVALID == xResult )
-            {
-                xResult = CKR_OK;
-            }
-        }
-    }
+    /*         / * It is optional to have a JITR certificate in storage. * / */
+    /*         if( CKR_OBJECT_HANDLE_INVALID == xResult ) */
+    /*         { */
+    /*             xResult = CKR_OK; */
+    /*         } */
+    /*     } */
+    /* } */
 
     /* Attach the client certificate(s) and private key to the TLS configuration. */
     if( 0 == xResult )
@@ -867,6 +871,7 @@ BaseType_t TLS_Connect( void * pvContext )
          * that do not require mutual authentication. If the server does
          * require mutual authentication, the handshake will fail. */
         xPKCSResult = prvInitializeClientCredential( pxCtx );
+        TLS_PRINT( ( "PKCS#11 status from prvInitializeClientCredential: 0x%02x", xPKCSResult ) );
     }
 
     if( ( 0 == xResult ) && ( NULL != pxCtx->ppcAlpnProtocols ) )
