@@ -953,11 +953,14 @@ static CK_RV prvGetProvisionedState( CK_SESSION_HANDLE xSession,
     /* Check for the client certificate. */
     if( CKR_OK == xResult )
     {
+        configPRINTF(("Attempting to find certificate for pkcs11configLABEL_DEVICE_CERTIFICATE_FOR_TLS\n"));
+
         xResult = xFindObjectWithLabelAndClass( xSession,
                                                 pkcs11configLABEL_DEVICE_CERTIFICATE_FOR_TLS,
                                                 sizeof( pkcs11configLABEL_DEVICE_CERTIFICATE_FOR_TLS ) - 1,
                                                 CKO_CERTIFICATE,
                                                 &pxProvisionedState->xClientCertificate );
+        configPRINTF(("Result is %d", xResult));
     }
 
     /* Check for a crypto element identifier. */
@@ -1099,19 +1102,37 @@ CK_RV xProvisionDevice( CK_SESSION_HANDLE xSession,
 
     /* If a client certificate has been provided by the caller, attempt to
      * import it. */
-    if( ( xResult == CKR_OK ) && ( NULL != pxParams->pucClientCertificate ) )
+    if(pxParams->pucClientCertificate == NULL)
     {
-        xResult = xProvisionCertificate( xSession,
-                                         pxParams->pucClientCertificate,
-                                         pxParams->ulClientCertificateLength,
-                                         ( uint8_t * ) pkcs11configLABEL_DEVICE_CERTIFICATE_FOR_TLS,
-                                         &xObject );
-
-        if( ( xResult != CKR_OK ) || ( xObject == CK_INVALID_HANDLE ) )
-        {
-            configPRINTF( ( "ERROR: Failed to provision device certificate. %d \r\n", xResult ) );
-        }
+        configPRINTF(("Configured certificate is NULL"));
     }
+
+    #define keyCLIENT_CERTIFICATE_PEM                   \
+"-----BEGIN CERTIFICATE-----\n" \
+"MIIBpDCCAUugAwIBAgIQT+6ngxoK6ecoOuQowOjm2zAKBggqhkjOPQQDAjAwMRQw\n" \
+"EgYDVQQKDAtFeGFtcGxlIEluYzEYMBYGA1UEAwwPRXhhbXBsZSBSb290IENBMCAX\n" \
+"DTIxMDcwODAwMDAwMFoYDzMwMDAxMjMxMjM1OTU5WjAzMRQwEgYDVQQKDAtFeGFt\n" \
+"cGxlIEluYzEbMBkGA1UEAwwSMDEyMzQ2NDk2RTZBOEQxNEVFMFkwEwYHKoZIzj0C\n" \
+"AQYIKoZIzj0DAQcDQgAENDdVOoOGmRtk9ynWaVIEYQnrrQge9XYkDbjBwoPt1VpY\n" \
+"0/6CUvbwe/8xYTjsZZ1ZuswdmjPjyp9dghwGWkj1I6NCMEAwHQYDVR0OBBYEFKqT\n" \
+"oPd4/ghIwpGO0ysyTL5n+MPOMB8GA1UdIwQYMBaAFHAiDzzao8vsLunjQe+3kirg\n" \
+"5AWAMAoGCCqGSM49BAMCA0cAMEQCIBTPqMIG++crVIs9KoXB36dSPQpXssszyO83\n" \
+"C/AjA2g4AiAVEfy146VUtamSd8m/9DYCZBK4+MyTI3ZNAHNuc6czow==\n" \
+"-----END CERTIFICATE-----"
+
+    // if( ( xResult == CKR_OK ) && ( NULL != pxParams->pucClientCertificate ) )
+    // {
+        // xResult = xProvisionCertificate( xSession,
+        //                                  (uint8_t *)keyCLIENT_CERTIFICATE_PEM,
+        //                                  sizeof(keyCLIENT_CERTIFICATE_PEM),
+        //                                  ( uint8_t * ) pkcs11configLABEL_DEVICE_CERTIFICATE_FOR_TLS,
+        //                                  &xObject );
+
+        // if( ( xResult != CKR_OK ) || ( xObject == CK_INVALID_HANDLE ) )
+        // {
+        //     configPRINTF( ( "ERROR: Failed to provision device certificate. %d \r\n", xResult ) );
+        // }
+    // }
 
     #if ( pkcs11configIMPORT_PRIVATE_KEYS_SUPPORTED == 1 )
 
@@ -1156,11 +1177,14 @@ CK_RV xProvisionDevice( CK_SESSION_HANDLE xSession,
         }
     }
 
+    xResult = CKR_OK;
+
     /* Check whether a key pair is now present. In order to support X.509
      * certificate enrollment, the public and private key objects must both be
      * available. */
     if( ( xResult == CKR_OK ) && ( CK_FALSE == xImportedPrivateKey ) )
     {
+        configPRINTF(("Calling prvGetProvisionedState"));
         xResult = prvGetProvisionedState( xSession,
                                           &xProvisionedState );
 
@@ -1183,6 +1207,8 @@ CK_RV xProvisionDevice( CK_SESSION_HANDLE xSession,
 
     if( ( xResult == CKR_OK ) && ( CK_TRUE == xKeyPairGenerationMode ) )
     {
+        configPRINTF(("Generating new key-pair"));
+
         /* Generate a new default key pair. */
         xResult = xProvisionGenerateKeyPairEC( xSession,
                                                ( uint8_t * ) pkcs11configLABEL_DEVICE_PRIVATE_KEY_FOR_TLS,
@@ -1205,7 +1231,10 @@ CK_RV xProvisionDevice( CK_SESSION_HANDLE xSession,
                                 &xProvisionedState.pucDerPublicKey,
                                 &xProvisionedState.ulDerPublicKeyLength );
         }
-
+        else
+        {
+            configPRINT(("Failed to generate key-pair"));
+        }
         /* Ensure that an error condition is set if either object is still
          * missing. */
         if( ( CKR_OK == xResult ) &&
@@ -1215,6 +1244,20 @@ CK_RV xProvisionDevice( CK_SESSION_HANDLE xSession,
             xResult = CKR_KEY_HANDLE_INVALID;
         }
     }
+
+            prvExportPublicKey( xSession,
+                                xProvisionedState.xPublicKey,
+                                &xProvisionedState.pucDerPublicKey,
+                                &xProvisionedState.ulDerPublicKeyLength );
+            if( NULL != xProvisionedState.pcIdentifier )
+        {
+            configPRINTF( ( "Recommended certificate subject name: CN=%s\r\n", xProvisionedState.pcIdentifier ) );
+        }
+
+        prvWriteHexBytesToConsole( "Device public key",
+                                   xProvisionedState.pucDerPublicKey,
+                                   xProvisionedState.ulDerPublicKeyLength );
+
 
     /* Log the device public key for developer enrollment purposes, but only if
     * there's not already a certificate, or if a new key was just generated. */
