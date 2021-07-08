@@ -117,7 +117,7 @@
  * must be unique so edit as required to ensure no two clients connecting to the
  * same broker use the same client identifier.
  */
-    #define democonfigCLIENT_IDENTIFIER    clientcredentialIOT_THING_NAME
+    #define democonfigCLIENT_IDENTIFIER    "0123CAFE161E0F8CEE"
 #endif
 
 #ifndef democonfigMQTT_BROKER_PORT
