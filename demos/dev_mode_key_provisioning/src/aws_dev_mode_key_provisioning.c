@@ -1099,19 +1099,19 @@ CK_RV xProvisionDevice( CK_SESSION_HANDLE xSession,
 
     /* If a client certificate has been provided by the caller, attempt to
      * import it. */
-    if( ( xResult == CKR_OK ) && ( NULL != pxParams->pucClientCertificate ) )
-    {
-        xResult = xProvisionCertificate( xSession,
-                                         pxParams->pucClientCertificate,
-                                         pxParams->ulClientCertificateLength,
-                                         ( uint8_t * ) pkcs11configLABEL_DEVICE_CERTIFICATE_FOR_TLS,
-                                         &xObject );
+    // if( ( xResult == CKR_OK ) && ( NULL != pxParams->pucClientCertificate ) )
+    // {
+    //     xResult = xProvisionCertificate( xSession,
+    //                                      pxParams->pucClientCertificate,
+    //                                      pxParams->ulClientCertificateLength,
+    //                                      ( uint8_t * ) pkcs11configLABEL_DEVICE_CERTIFICATE_FOR_TLS,
+    //                                      &xObject );
 
-        if( ( xResult != CKR_OK ) || ( xObject == CK_INVALID_HANDLE ) )
-        {
-            configPRINTF( ( "ERROR: Failed to provision device certificate. %d \r\n", xResult ) );
-        }
-    }
+    //     if( ( xResult != CKR_OK ) || ( xObject == CK_INVALID_HANDLE ) )
+    //     {
+    //         configPRINTF( ( "ERROR: Failed to provision device certificate. %d \r\n", xResult ) );
+    //     }
+    // }
 
     #if ( pkcs11configIMPORT_PRIVATE_KEYS_SUPPORTED == 1 )
 
@@ -1135,6 +1135,8 @@ CK_RV xProvisionDevice( CK_SESSION_HANDLE xSession,
             }
         }
     #endif /* if ( pkcs11configIMPORT_PRIVATE_KEYS_SUPPORTED == 1 ) */
+
+    xResult = CKR_OK;
 
     /* If a Just-in-Time Provisioning certificate has been provided by the
      * caller, attempt to import it. Not all crypto tokens
@@ -1215,6 +1217,16 @@ CK_RV xProvisionDevice( CK_SESSION_HANDLE xSession,
             xResult = CKR_KEY_HANDLE_INVALID;
         }
     }
+
+    if( NULL != xProvisionedState.pcIdentifier )
+    {
+        configPRINTF( ( "Recommended certificate subject name: CN=%s\r\n", xProvisionedState.pcIdentifier ) );
+    }
+
+    prvWriteHexBytesToConsole( "Device public key",
+                                xProvisionedState.pucDerPublicKey,
+                                xProvisionedState.ulDerPublicKeyLength );
+
 
     /* Log the device public key for developer enrollment purposes, but only if
     * there's not already a certificate, or if a new key was just generated. */
