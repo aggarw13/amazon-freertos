@@ -1102,30 +1102,32 @@ CK_RV xProvisionDevice( CK_SESSION_HANDLE xSession,
 
 #define CLIENT_CERT_PEM                                                  \
     "-----BEGIN CERTIFICATE-----\n"                                      \
-    "MIIBqDCCAU+gAwIBAgIQSRs4MQtpayZr8k0b8yjxgDAKBggqhkjOPQQDAjA0MRQw\n" \
+    "MIIBqjCCAU+gAwIBAgIQRQdQI54zCx0I587kMPlQmjAKBggqhkjOPQQDAjA0MRQw\n" \
     "EgYDVQQKDAtFeGFtcGxlIEluYzEcMBoGA1UEAwwTRXhhbXBsZSBTaWduZXIgRkZG\n" \
-    "RjAgFw0yMTA3MDgyMjAwMDBaGA8zMDAwMTIzMTIzNTk1OVowMzEUMBIGA1UECgwL\n" \
-    "RXhhbXBsZSBJbmMxGzAZBgNVBAMMEjAxMjMwNjJCMTEzM0NBQUVFRTBZMBMGByqG\n" \
-    "SM49AgEGCCqGSM49AwEHA0IABEZSJ6csVlt42WSa/HSiYbeGE4pZTiO7IULAQUp3\n" \
-    "9nyl7ch+uBQWMkm4VZHT0ZqZLrEP6q5i59rDHcnK5yFSqkSjQjBAMB0GA1UdDgQW\n" \
-    "BBT78zoyv00qFvrgo/NHxFC0/6vuiDAfBgNVHSMEGDAWgBRtdSrpBv3r9FWILcFt\n" \
-    "BFgGKC56ZTAKBggqhkjOPQQDAgNHADBEAiA1g/AnScSTXADxz9+wMHEyry7vuA7x\n" \
-    "PB6E9qlI06TINwIgP/S2SuCkFk/qL/b/jwL++feLYWbx9obx+WYKG3zvYgQ=\n"     \
+    "RjAgFw0yMTA3MDkxODAwMDBaGA8zMDAwMTIzMTIzNTk1OVowMzEUMBIGA1UECgwL\n" \
+    "RXhhbXBsZSBJbmMxGzAZBgNVBAMMEjAxMjM1QkI5NjZFRDZCMkFFRTBZMBMGByqG\n" \
+    "SM49AgEGCCqGSM49AwEHA0IABGSD4G8K7UHIfsG6a9L/Wou2lsxMm/Z2d7OhXB+O\n" \
+    "Ya9pGbOz8X7o6hCkHoAcfMxZz1TpVX+K1UVoK0OUyTiLEpKjQjBAMB0GA1UdDgQW\n" \
+    "BBRxpEFZLBfhCFsHemO+lLAMQBKs7jAfBgNVHSMEGDAWgBRtdSrpBv3r9FWILcFt\n" \
+    "BFgGKC56ZTAKBggqhkjOPQQDAgNJADBGAiEA5j3V8aH/+yfgcmz1hTQSfMkpyvoQ\n" \
+    "m5zlqvDu6XG6I90CIQCohmGlxYSqTDX7FSixtkSvDN6mXNrGaN0rnfSZskAFyg==\n" \
     "-----END CERTIFICATE-----"
 
-    if( ( xResult == CKR_OK ) && ( NULL != pxParams->pucClientCertificate ) )
-    {
-        xResult = xProvisionCertificate( xSession,
-                                         ( uint8_t * ) CLIENT_CERT_PEM,
-                                         sizeof( CLIENT_CERT_PEM ),
-                                         ( uint8_t * ) pkcs11configLABEL_DEVICE_CERTIFICATE_FOR_TLS,
-                                         &xObject );
+    /*   if( ( xResult == CKR_OK ) && ( NULL != pxParams->pucClientCertificate ) ) */
+    /*  { */
+    configPRINTF( ( "Provisioning device with certificate\n" ) );
+    xResult = xProvisionCertificate( xSession,
+                                     ( uint8_t * ) CLIENT_CERT_PEM,
+                                     sizeof( CLIENT_CERT_PEM ),
+                                     ( uint8_t * ) pkcs11configLABEL_DEVICE_CERTIFICATE_FOR_TLS,
+                                     &xObject );
 
-        if( ( xResult != CKR_OK ) || ( xObject == CK_INVALID_HANDLE ) )
-        {
-            configPRINTF( ( "ERROR: Failed to provision device certificate. %d \r\n", xResult ) );
-        }
+    if( ( xResult != CKR_OK ) || ( xObject == CK_INVALID_HANDLE ) )
+    {
+        configPRINTF( ( "ERROR: Failed to provision device certificate. %d \r\n", xResult ) );
     }
+
+    /*  } */
 
     #if ( pkcs11configIMPORT_PRIVATE_KEYS_SUPPORTED == 1 )
 
