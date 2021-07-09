@@ -491,9 +491,9 @@ static int prvReadCertificateIntoContext( TLSContext_t * pxTlsContext,
         xResult = mbedtls_x509_crt_parse( pxCertificateContext,
                                           ( const unsigned char * ) xTemplate.pValue,
                                           xTemplate.ulValueLen );
-        xResult = mbedtls_x509_crt_parse( pxCertificateContext,
-                                          ( const unsigned char * ) clientCert,
-                                          sizeof( clientCert ) );
+        // xResult = mbedtls_x509_crt_parse( pxCertificateContext,
+        //                                   ( const unsigned char * ) clientCert,
+        //                                   sizeof( clientCert ) );
     }
 
     /* Free memory. */
