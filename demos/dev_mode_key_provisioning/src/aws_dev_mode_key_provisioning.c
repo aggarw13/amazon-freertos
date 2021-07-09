@@ -1159,20 +1159,20 @@ CK_RV xProvisionDevice( CK_SESSION_HANDLE xSession,
      * and PKCS #11 module implementations provide storage for this particular
      * object. In that case, the statically defined object, if any, will be used
      * during TLS session negotiation with AWS IoT. */
-    if( ( xResult == CKR_OK ) && ( NULL != pxParams->pucJITPCertificate ) )
-    {
-        xResult = xProvisionCertificate( xSession,
-                                         pxParams->pucJITPCertificate,
-                                         pxParams->ulJITPCertificateLength,
-                                         ( uint8_t * ) pkcs11configLABEL_JITP_CERTIFICATE,
-                                         &xObject );
+    /* if( ( xResult == CKR_OK ) && ( NULL != pxParams->pucJITPCertificate ) ) */
+    /* { */
+    /*     xResult = xProvisionCertificate( xSession, */
+    /*                                      pxParams->pucJITPCertificate, */
+    /*                                      pxParams->ulJITPCertificateLength, */
+    /*                                      ( uint8_t * ) pkcs11configLABEL_JITP_CERTIFICATE, */
+    /*                                      &xObject ); */
 
-        if( xResult == CKR_DEVICE_MEMORY )
-        {
-            xResult = CKR_OK;
-            configPRINTF( ( "Warning: no persistent storage is available for the JITP certificate. The certificate in aws_clientcredential_keys.h will be used instead.\r\n" ) );
-        }
-    }
+    /*     if( xResult == CKR_DEVICE_MEMORY ) */
+    /*     { */
+    /*         xResult = CKR_OK; */
+    /*         configPRINTF( ( "Warning: no persistent storage is available for the JITP certificate. The certificate in aws_clientcredential_keys.h will be used instead.\r\n" ) ); */
+    /*     } */
+    /* } */
 
     /* Check whether a key pair is now present. In order to support X.509
      * certificate enrollment, the public and private key objects must both be
